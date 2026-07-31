@@ -145,6 +145,10 @@
     try {
       await postJSON("/auth/login", { email: email.value, password: password.value });
       setFormMessage("login", "Готово! Перенаправляем в кабинет…", "is-success");
+
+      setTimeout(function () {
+        window.location.href = "dashboard.html";
+      }, 1000);
     } catch (err) {
       setFormMessage("login", err.message, "is-error");
     } finally {
