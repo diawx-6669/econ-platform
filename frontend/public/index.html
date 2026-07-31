@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Index — учись понимать экономику</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/main.css" />
+<link rel="stylesheet" href="assets/css/auth.css" />
+</head>
+<body>
+
+  <div class="aurora-bg" aria-hidden="true">
+    <span class="blob blob-violet"></span>
+    <span class="blob blob-teal"></span>
+    <span class="blob blob-pink"></span>
+    <span class="blob blob-gold"></span>
+    <div class="grain"></div>
+  </div>
+
+  <main class="shell">
+
+    <section class="brand-pane">
+      <div class="brand-pane__inner">
+        <div class="brand-mark">
+          <span class="brand-mark__glyph">Ix</span>
+          <span class="brand-mark__word">Index</span>
+        </div>
+
+        <h1 class="brand-headline">Экономика,<br>которая считается.</h1>
+        <p class="brand-sub">Короткие уроки, живые графики и практика на реальных данных — вместо сухой теории из учебника.</p>
+
+        <div class="growth-chart" role="img" aria-label="Иллюстрация растущего графика">
+          <svg viewBox="0 0 520 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="lineGrad" x1="0" y1="220" x2="520" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#f2b84b"/>
+                <stop offset="0.5" stop-color="#7c5cff"/>
+                <stop offset="1" stop-color="#2dd4da"/>
+              </linearGradient>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="220" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#7c5cff" stop-opacity="0.28"/>
+                <stop offset="1" stop-color="#7c5cff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <g class="grid-lines">
+              <line x1="0" y1="55" x2="520" y2="55"/>
+              <line x1="0" y1="110" x2="520" y2="110"/>
+              <line x1="0" y1="165" x2="520" y2="165"/>
+            </g>
+            <path class="chart-area" d="M0,190 L40,175 L90,182 L140,140 L190,150 L240,100 L290,115 L340,70 L390,80 L440,35 L520,20 L520,220 L0,220 Z" fill="url(#areaGrad)"/>
+            <path class="chart-line" d="M0,190 L40,175 L90,182 L140,140 L190,150 L240,100 L290,115 L340,70 L390,80 L440,35 L520,20" stroke="url(#lineGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle class="chart-dot" cx="520" cy="20" r="4.5"/>
+          </svg>
+        </div>
+
+        <ul class="ticker" aria-hidden="true">
+          <li>ВВП <span class="up">▲ 2.4%</span></li>
+          <li>Инфляция <span class="down">▼ 0.3%</span></li>
+          <li>Ставка ЦБ <span class="flat">16.0%</span></li>
+          <li>Индекс Мосбиржи <span class="up">▲ 1.1%</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="auth-pane">
+      <div class="auth-card">
+
+        <div class="tabs" role="tablist" aria-label="Вход или регистрация">
+          <button class="tab is-active" id="tab-login" role="tab" aria-selected="true" aria-controls="panel-login">Вход</button>
+          <button class="tab" id="tab-register" role="tab" aria-selected="false" aria-controls="panel-register">Регистрация</button>
+          <span class="tab-indicator"></span>
+        </div>
+
+        <!-- LOGIN -->
+        <form class="panel is-active" id="panel-login" role="tabpanel" aria-labelledby="tab-login" novalidate>
+          <h2 class="panel-title">С возвращением</h2>
+          <p class="panel-sub">Продолжите с того места, где остановились.</p>
+
+          <div class="field">
+            <input type="email" id="login-email" placeholder=" " required autocomplete="email" />
+            <label for="login-email">Email</label>
+            <span class="field-error" data-for="login-email"></span>
+          </div>
+
+          <div class="field">
+            <input type="password" id="login-password" placeholder=" " required autocomplete="current-password" minlength="6" />
+            <label for="login-password">Пароль</label>
+            <button type="button" class="toggle-pass" data-target="login-password" aria-label="Показать пароль">
+              <svg class="ic-eye" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <span class="field-error" data-for="login-password"></span>
+          </div>
+
+          <div class="row-between">
+            <label class="checkbox">
+              <input type="checkbox" id="remember" />
+              <span class="checkbox-box"></span>
+              Запомнить меня
+            </label>
+            <a href="#" class="link-muted">Забыли пароль?</a>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <span>Войти</span>
+          </button>
+
+          <p class="form-message" data-form="login"></p>
+
+          <p class="switch-line">Ещё нет аккаунта? <button type="button" class="link-strong" data-switch="register">Создать</button></p>
+        </form>
+
+        <!-- REGISTER -->
+        <form class="panel" id="panel-register" role="tabpanel" aria-labelledby="tab-register" novalidate>
+          <h2 class="panel-title">Начните учиться</h2>
+          <p class="panel-sub">Займёт меньше минуты. Без сложных терминов на старте.</p>
+
+          <div class="field">
+            <input type="text" id="reg-name" placeholder=" " required autocomplete="name" />
+            <label for="reg-name">Имя</label>
+            <span class="field-error" data-for="reg-name"></span>
+          </div>
+
+          <div class="field">
+            <input type="email" id="reg-email" placeholder=" " required autocomplete="email" />
+            <label for="reg-email">Email</label>
+            <span class="field-error" data-for="reg-email"></span>
+          </div>
+
+          <div class="field">
+            <input type="password" id="reg-password" placeholder=" " required autocomplete="new-password" minlength="8" />
+            <label for="reg-password">Пароль</label>
+            <button type="button" class="toggle-pass" data-target="reg-password" aria-label="Показать пароль">
+              <svg class="ic-eye" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <span class="field-error" data-for="reg-password"></span>
+          </div>
+
+          <div class="pass-strength" aria-hidden="true">
+            <span class="pass-strength__bar"><i></i></span>
+            <span class="pass-strength__label">Минимум 8 символов</span>
+          </div>
+
+          <label class="checkbox checkbox--terms">
+            <input type="checkbox" id="terms" required />
+            <span class="checkbox-box"></span>
+            Согласен с <a href="#" class="link-muted">условиями</a> и <a href="#" class="link-muted">политикой конфиденциальности</a>
+          </label>
+          <span class="field-error" data-for="terms"></span>
+
+          <button type="submit" class="btn-primary">
+            <span>Создать аккаунт</span>
+          </button>
+
+          <p class="form-message" data-form="register"></p>
+
+          <p class="switch-line">Уже с нами? <button type="button" class="link-strong" data-switch="login">Войти</button></p>
+        </form>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script src="assets/js/auth.js"></script>
+</body>
+</html>

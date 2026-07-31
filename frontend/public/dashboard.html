@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Index — кабинет</title>
+<link rel="stylesheet" href="assets/css/main.css" />
+<style>
+  .stub {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 24px;
+  }
+  .stub h1 { font-family: var(--font-display); font-size: 28px; margin-bottom: 10px; }
+  .stub p { color: var(--ink-1); max-width: 420px; margin: 0 0 24px; }
+  .stub a {
+    font-size: 14px; font-weight: 600; color: var(--bg);
+    background: linear-gradient(120deg, var(--gold), var(--teal));
+    padding: 12px 24px; border-radius: 10px; text-decoration: none;
+  }
+</style>
+</head>
+<body>
+  <div class="aurora-bg" aria-hidden="true">
+    <span class="blob blob-violet"></span>
+    <span class="blob blob-teal"></span>
+    <span class="blob blob-pink"></span>
+  </div>
+  <div class="stub">
+    <h1>Кабинет в разработке</h1>
+    <p>Курсы, уроки и интерактивные задания по экономике появятся здесь на следующем этапе. Пока готов только вход и регистрация.</p>
+    <a href="index.html">Вернуться на вход</a>
+  </div>
+</body>
+</html>
