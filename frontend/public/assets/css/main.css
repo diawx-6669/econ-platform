@@ -1,5 +1,5 @@
 :root {
-  --bg: #080b16;
+  --bg: #04050a;
   --bg-alt: #0c1020;
   --violet: #7c5cff;
   --teal: #2dd4da;
@@ -27,7 +27,7 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background: var(--bg);
+  background: #04050a;
   color: var(--ink-0);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -42,75 +42,131 @@ a { color: inherit; }
 
 button { font-family: inherit; }
 
-/* ---------- Aurora background ---------- */
+/* ---------- Living cosmic background ---------- */
 
 .aurora-bg {
   position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background: radial-gradient(ellipse at 20% 10%, #0e1330 0%, var(--bg) 55%);
+  background:
+    radial-gradient(120% 90% at 58% 46%, rgba(120,150,255,0.10) 0%, rgba(8,10,18,0) 55%),
+    radial-gradient(90% 70% at 18% 18%, rgba(90,80,190,0.10) 0%, rgba(8,10,18,0) 60%),
+    radial-gradient(140% 120% at 50% 120%, #0a0c16 0%, #04050a 70%);
 }
 
+.aurora-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.72) 100%);
+}
+
+/* animated canvas with drifting shards + sparks */
+#bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* the light core that breathes behind everything */
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.55;
-  will-change: transform;
+  will-change: transform, opacity;
+  pointer-events: none;
 }
 
 .blob-violet {
-  width: 620px; height: 620px;
-  top: -160px; left: -120px;
-  background: radial-gradient(circle at 30% 30%, var(--violet), transparent 70%);
-  animation: drift1 22s ease-in-out infinite;
+  width: 46vw; height: 46vw;
+  min-width: 420px; min-height: 420px;
+  top: 50%; left: 58%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(200,215,255,0.45) 8%, rgba(120,150,255,0.18) 22%, rgba(80,90,200,0.06) 42%, transparent 68%);
+  filter: blur(6px);
+  animation: core-breathe 7s ease-in-out infinite;
 }
 
 .blob-teal {
-  width: 520px; height: 520px;
-  bottom: -180px; left: 18%;
-  background: radial-gradient(circle at 40% 40%, var(--teal), transparent 70%);
-  animation: drift2 26s ease-in-out infinite;
+  width: 70vw; height: 70vw;
+  top: 50%; left: 58%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(140,170,255,0.16) 0%, transparent 62%);
+  filter: blur(60px);
+  animation: core-breathe 11s ease-in-out infinite reverse;
 }
 
 .blob-pink {
-  width: 480px; height: 480px;
-  top: 8%; right: -140px;
-  background: radial-gradient(circle at 50% 50%, var(--pink), transparent 70%);
-  animation: drift3 20s ease-in-out infinite;
+  width: 52vw; height: 52vw;
+  top: 12%; left: -8%;
+  background: radial-gradient(circle, rgba(124,92,255,0.16) 0%, transparent 65%);
+  filter: blur(90px);
+  animation: drift-slow 26s ease-in-out infinite;
 }
 
 .blob-gold {
-  width: 360px; height: 360px;
-  bottom: 6%; right: 10%;
-  background: radial-gradient(circle at 50% 50%, var(--gold), transparent 70%);
-  opacity: 0.35;
-  animation: drift1 30s ease-in-out infinite reverse;
+  width: 40vw; height: 40vw;
+  bottom: -12%; left: 26%;
+  background: radial-gradient(circle, rgba(45,212,218,0.12) 0%, transparent 66%);
+  filter: blur(100px);
+  animation: drift-slow 34s ease-in-out infinite reverse;
 }
 
-@keyframes drift1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(60px, 40px) scale(1.08); }
+/* thin light rays sweeping out of the core */
+.aurora-bg::before {
+  content: "";
+  position: absolute;
+  top: 50%; left: 58%;
+  width: 150vmax; height: 150vmax;
+  transform: translate(-50%, -50%);
+  background:
+    conic-gradient(from 0deg,
+      rgba(255,255,255,0.055) 0deg, transparent 8deg,
+      rgba(255,255,255,0.035) 34deg, transparent 46deg,
+      rgba(255,255,255,0.05) 96deg, transparent 108deg,
+      rgba(255,255,255,0.03) 170deg, transparent 184deg,
+      rgba(255,255,255,0.045) 250deg, transparent 262deg,
+      rgba(255,255,255,0.03) 320deg, transparent 336deg);
+  -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,0.9) 0%, transparent 45%);
+  mask-image: radial-gradient(circle, rgba(0,0,0,0.9) 0%, transparent 45%);
+  animation: rays-spin 90s linear infinite;
+  pointer-events: none;
 }
-@keyframes drift2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-50px, -30px) scale(1.1); }
+
+@keyframes core-breathe {
+  0%, 100% { opacity: 0.85; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.07); }
 }
-@keyframes drift3 {
+
+@keyframes drift-slow {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-40px, 50px) scale(0.95); }
+  50% { transform: translate(4vw, -3vh) scale(1.08); }
+}
+
+@keyframes rays-spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .grain {
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+@media (max-width: 980px) {
+  .blob-violet { left: 60%; top: 32%; }
+  .blob-teal { left: 60%; top: 32%; }
+  .aurora-bg::before { left: 60%; top: 32%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .blob { animation: none; }
+  .blob, .aurora-bg::before { animation: none; }
+  #bg-canvas { display: none; }
 }
 
 /* ---------- Layout shell ---------- */
