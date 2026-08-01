@@ -28,7 +28,7 @@
       var p = JSON.parse(localStorage.getItem(progressKey));
       if (p && typeof p === "object") return p;
     } catch (e) { /* ignore */ }
-    return { completed: {}, quizScores: {}, lastVisited: null };
+    return { completed: {}, quizScores: {}, lastVisited: null, stars: 0 };
   }
 
   function saveProgress() {
@@ -55,7 +55,7 @@
     {
       id: "basics",
       theme: "violet",
-      icon: "◆",
+      icon: "🧠",
       title: "Основы экономики",
       desc: "Зачем вообще нужна экономика, ограниченность ресурсов и альтернативные издержки.",
       lessons: [
@@ -157,7 +157,7 @@
     {
       id: "market",
       theme: "teal",
-      icon: "⇄",
+      icon: "🛒",
       title: "Спрос и предложение",
       desc: "Как формируется рыночная цена, что такое равновесие и эластичность.",
       lessons: [
@@ -255,7 +255,7 @@
     {
       id: "money",
       theme: "gold",
-      icon: "₽",
+      icon: "💰",
       title: "Деньги и инфляция",
       desc: "Почему цены растут, что такое покупательная способность и роль центробанка.",
       lessons: [
@@ -348,7 +348,7 @@
     {
       id: "personal",
       theme: "pink",
-      icon: "%",
+      icon: "🐷",
       title: "Личные финансы",
       desc: "Сложный процент, бюджетирование и практические инструменты для повседневных решений.",
       lessons: [
@@ -442,6 +442,7 @@
   var userInitialEl = document.getElementById("user-initial");
   var userEmailEl = document.getElementById("user-email-dd");
   var streakNumEl = document.getElementById("streak-num");
+  var starsNumEl = document.getElementById("stars-num");
 
   userNameEl.textContent = user.name || "Ученик";
   userInitialEl.textContent = (user.name || "У").trim().charAt(0).toUpperCase();
@@ -653,6 +654,8 @@
     var qs = lesson.quiz;
     var current = 0;
     var results = new Array(qs.length).fill(null); // null | true | false
+    var selected = null;
+    var confirmed = false;
 
     function renderProgressLine() {
       return '<div class="quiz-progress-line">' + qs.map(function (_, i) {
@@ -669,43 +672,71 @@
       html += '<div class="quiz-q">' + (current + 1) + '. ' + q.q + '</div>';
       html += '<div class="quiz-options">';
       q.options.forEach(function (opt, i) {
-        html += '<button class="quiz-opt" data-opt="' + i + '"><span class="quiz-opt__letter">' + letters[i] + '</span><span>' + opt + '</span></button>';
+        var cls = "quiz-opt";
+        var disabledAttr = "";
+        if (confirmed) {
+          disabledAttr = "disabled";
+          if (i === q.correct) cls += " is-correct";
+          else if (i === selected) cls += " is-wrong";
+        } else if (i === selected) {
+          cls += " is-selected";
+        }
+        html += '<button class="' + cls + '" data-opt="' + i + '" ' + disabledAttr + '><span class="quiz-opt__letter">' + letters[i] + '</span><span>' + opt + '</span></button>';
       });
       html += '</div>';
-      html += '<div class="quiz-explain" id="quiz-explain">' + q.explain + '</div>';
-      html += '<div class="quiz-footer"><button class="btn btn-grad" id="quiz-next" disabled>' + (current === qs.length - 1 ? "Завершить" : "Дальше") + '</button></div>';
+
+      if (confirmed) {
+        var isCorrect = selected === q.correct;
+        html += '<div class="quiz-reveal is-visible">';
+        html += mascotHTML(isCorrect ? "happy" : "sad", isCorrect ? pick(["Отлично! Именно так 🎉", "Верно! Ты молодец!", "Точно в цель!"]) : pick(["Почти! Смотри объяснение 👀", "Не в этот раз, но это нормально!", "Бывает! Разберём вместе"]));
+        html += '<div class="quiz-explain is-visible">' + q.explain + '</div>';
+        html += '</div>';
+        html += '<div class="quiz-footer"><button class="btn btn-grad" id="quiz-next">' + (current === qs.length - 1 ? "Завершить 🏁" : "Дальше →") + '</button></div>';
+      } else {
+        html += '<div class="quiz-footer"><button class="btn btn-grad" id="quiz-confirm"' + (selected === null ? " disabled" : "") + '>Подтвердить ответ</button></div>';
+      }
+
       container.innerHTML = '<div class="quiz-block">' + html + '</div>';
 
       var opts = container.querySelectorAll(".quiz-opt");
-      var nextBtn = container.querySelector("#quiz-next");
-      var explainEl = container.querySelector("#quiz-explain");
-      var answered = false;
-
       opts.forEach(function (btn) {
         btn.addEventListener("click", function () {
-          if (answered) return;
-          answered = true;
-          var chosen = Number(btn.getAttribute("data-opt"));
-          var isCorrect = chosen === q.correct;
-          results[current] = isCorrect;
-          opts.forEach(function (b, i) {
-            b.disabled = true;
-            if (i === q.correct) b.classList.add("is-correct");
-            else if (i === chosen) b.classList.add("is-wrong");
-          });
-          explainEl.classList.add("is-visible");
-          nextBtn.disabled = false;
+          if (confirmed) return;
+          selected = Number(btn.getAttribute("data-opt"));
+          renderQuestion();
         });
       });
 
-      nextBtn.addEventListener("click", function () {
-        if (current < qs.length - 1) {
-          current += 1;
-          renderQuestion();
-        } else {
-          finishQuiz();
+      if (!confirmed) {
+        var confirmBtn = container.querySelector("#quiz-confirm");
+        if (confirmBtn) {
+          confirmBtn.addEventListener("click", function () {
+            if (selected === null) return;
+            confirmed = true;
+            var isCorrect = selected === q.correct;
+            results[current] = isCorrect;
+            if (isCorrect) {
+              progress.stars = (progress.stars || 0) + 1;
+              saveProgress();
+              updateStreak();
+            }
+            renderQuestion();
+            if (isCorrect) spawnConfetti(18, false);
+          });
         }
-      });
+      } else {
+        var nextBtn = container.querySelector("#quiz-next");
+        nextBtn.addEventListener("click", function () {
+          if (current < qs.length - 1) {
+            current += 1;
+            selected = null;
+            confirmed = false;
+            renderQuestion();
+          } else {
+            finishQuiz();
+          }
+        });
+      }
     }
 
     function finishQuiz() {
@@ -717,23 +748,89 @@
 
       var pct = Math.round((correctCount / qs.length) * 100);
       var nxt = nextLessonId(lesson.id);
+      var mood = pct >= 80 ? "party" : pct >= 50 ? "happy" : "sad";
+      var msg = pct >= 80 ? "Отличный результат! Урок засчитан." : pct >= 50 ? "Неплохо! Урок засчитан — можно повторить теорию выше." : "Урок засчитан. Стоит перечитать материал ещё раз.";
+
       var html = '<div class="quiz-result">';
+      html += mascotHTML(mood, "");
       html += '<div class="quiz-result__score">' + correctCount + '/' + qs.length + '</div>';
-      html += '<div class="quiz-result__label">' + (pct >= 80 ? "Отличный результат! Урок засчитан." : pct >= 50 ? "Неплохо! Урок засчитан — можно повторить теорию выше." : "Урок засчитан. Стоит перечитать материал ещё раз.") + '</div>';
+      html += '<div class="quiz-result__label">' + msg + '</div>';
       html += '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">';
       html += '<button class="btn btn-ghost" id="quiz-retry">Пройти квиз заново</button>';
       if (nxt) html += '<button class="btn btn-grad" id="quiz-go-next">Следующий урок →</button>';
       html += '</div></div>';
       container.innerHTML = '<div class="quiz-block">' + html + '</div>';
 
+      if (pct >= 80) spawnConfetti(46, true);
+
       container.querySelector("#quiz-retry").addEventListener("click", function () {
-        current = 0; results = new Array(qs.length).fill(null); renderQuestion();
+        current = 0; results = new Array(qs.length).fill(null); selected = null; confirmed = false; renderQuestion();
       });
       var goNext = container.querySelector("#quiz-go-next");
       if (goNext) goNext.addEventListener("click", function () { navigate({ view: "lesson", lessonId: nxt }); });
     }
 
     renderQuestion();
+  }
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  // ---- Mascot: friendly owl that reacts to answers ----
+  function mascotHTML(mood, speech) {
+    var eyes, mouth, extra = "";
+    if (mood === "happy" || mood === "party") {
+      eyes = '<path d="M20 30 Q26 22 32 30" stroke="#080b16" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+             '<path d="M44 30 Q50 22 56 30" stroke="#080b16" stroke-width="3" fill="none" stroke-linecap="round"/>';
+      mouth = '<path d="M28 44 Q38 54 48 44" stroke="#080b16" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    } else if (mood === "sad") {
+      eyes = '<circle cx="26" cy="30" r="5" fill="#080b16"/><circle cx="50" cy="30" r="5" fill="#080b16"/>' +
+             '<path d="M18 22 Q24 18 30 22" stroke="#080b16" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
+             '<path d="M46 22 Q52 18 58 22" stroke="#080b16" stroke-width="2.5" fill="none" stroke-linecap="round"/>';
+      mouth = '<path d="M28 48 Q38 40 48 48" stroke="#080b16" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    } else {
+      eyes = '<circle cx="26" cy="30" r="5" fill="#080b16"/><circle cx="50" cy="30" r="5" fill="#080b16"/>';
+      mouth = '<ellipse cx="38" cy="46" rx="6" ry="4" fill="#080b16"/>';
+    }
+    if (mood === "party") {
+      extra = '<text x="10" y="14" font-size="14">✨</text><text x="58" y="18" font-size="14">✨</text><text x="6" y="55" font-size="12">⭐</text>';
+    }
+    var owl =
+      '<svg viewBox="0 0 76 70" xmlns="http://www.w3.org/2000/svg">' +
+      '<ellipse cx="17" cy="40" rx="9" ry="14" fill="#7c5cff"/>' +
+      '<ellipse cx="59" cy="40" rx="9" ry="14" fill="#7c5cff"/>' +
+      '<circle cx="38" cy="36" r="26" fill="#a08cff"/>' +
+      '<circle cx="38" cy="38" r="21" fill="#f5f6fb"/>' +
+      '<circle cx="26" cy="30" r="9" fill="#ffffff" stroke="#7c5cff" stroke-width="2"/>' +
+      '<circle cx="50" cy="30" r="9" fill="#ffffff" stroke="#7c5cff" stroke-width="2"/>' +
+      eyes +
+      '<path d="M34 36 L38 44 L42 36 Z" fill="#f2b84b"/>' +
+      mouth +
+      extra +
+      '</svg>';
+    var speechHtml = speech ? '<div class="mascot-speech">' + speech + '</div>' : "";
+    return '<div class="mascot-row"><div class="mascot mascot--' + mood + '">' + owl + '</div>' + speechHtml + '</div>';
+  }
+
+  // ---- Confetti burst ----
+  function spawnConfetti(count, big) {
+    var colors = ["#7c5cff", "#2dd4da", "#e94f9e", "#f2b84b", "#6fe3ab"];
+    var holder = document.createElement("div");
+    holder.className = "confetti-holder";
+    document.body.appendChild(holder);
+    for (var i = 0; i < count; i++) {
+      var piece = document.createElement("span");
+      piece.className = "confetti-piece";
+      var size = big ? (6 + Math.random() * 6) : (5 + Math.random() * 4);
+      piece.style.left = (Math.random() * 100) + "vw";
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.width = size + "px";
+      piece.style.height = (size * 1.6) + "px";
+      piece.style.animationDuration = (1.6 + Math.random() * 1.4) + "s";
+      piece.style.animationDelay = (Math.random() * 0.4) + "s";
+      piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+      holder.appendChild(piece);
+    }
+    setTimeout(function () { holder.remove(); }, 3400);
   }
 
   // ---------------------------------------------------------------
@@ -1237,6 +1334,7 @@
     // simple deterministic "streak" based on days with any completed lesson activity
     var count = completedCount();
     streakNumEl.textContent = count > 0 ? Math.min(count, 30) : 0;
+    starsNumEl.textContent = progress.stars || 0;
   }
 
   function navigate(state) {
