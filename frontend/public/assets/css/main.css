@@ -355,3 +355,328 @@ button { font-family: inherit; }
 @media (max-width: 980px) {
   .ticker { display: none; }
 }
+
+
+/* ============================================================
+   POLISH LAYER — плавность, живое движение и читаемость текста
+   (только визуальный слой, разметка и логика не изменены)
+   ============================================================ */
+
+:root {
+  --ease-soft: cubic-bezier(.22,.61,.36,1);
+  --ease-smooth: cubic-bezier(.4,0,.2,1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.002em;
+}
+
+/* --- фон становится спокойнее, чтобы не мешал чтению --- */
+.grain { opacity: 0.4; mix-blend-mode: soft-light; }
+.blob-violet { filter: blur(22px); }
+.aurora-bg::before { opacity: 0.55; }
+.rays-2 { opacity: 0.5; }
+
+/* дополнительная мягкая «подложка» под контент: фон приглушается,
+   контраст текста растёт, но свечение остаётся видимым */
+.aurora-bg::after {
+  background:
+    radial-gradient(120% 100% at 50% 50%, rgba(4,5,10,0) 30%, rgba(4,5,10,0.82) 100%),
+    linear-gradient(180deg, rgba(80,110,220,0.05) 0%, rgba(4,5,10,0) 30%),
+    linear-gradient(90deg, rgba(4,5,10,0.55) 0%, rgba(4,5,10,0.12) 45%, rgba(4,5,10,0.5) 100%);
+  animation: veil-breathe 18s ease-in-out infinite;
+}
+
+@keyframes veil-breathe {
+  0%, 100% { opacity: 0.94; }
+  50% { opacity: 1; }
+}
+
+/* --- мягкое появление страницы --- */
+@keyframes rise-in {
+  from { opacity: 0; transform: translate3d(0, 18px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes rise-in-left {
+  from { opacity: 0; transform: translate3d(-22px, 0, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes soft-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -7px, 0); }
+}
+
+.brand-mark,
+.brand-headline,
+.brand-sub,
+.growth-chart,
+.ticker {
+  opacity: 0;
+  animation: rise-in 0.9s var(--ease-soft) forwards;
+}
+
+.brand-mark { animation-delay: 0.05s; }
+.brand-headline { animation-delay: 0.16s; }
+.brand-sub { animation-delay: 0.26s; }
+.growth-chart { animation-delay: 0.36s; }
+.ticker { animation-delay: 0.46s; }
+
+.brand-mark__glyph {
+  box-shadow: 0 8px 24px -10px rgba(124,92,255,0.9);
+  transition: transform 0.5s var(--ease-soft), box-shadow 0.5s var(--ease-soft);
+  animation: soft-float 7s ease-in-out infinite 1.2s;
+}
+
+.brand-mark:hover .brand-mark__glyph {
+  transform: translateY(-2px) rotate(-4deg) scale(1.05);
+  box-shadow: 0 14px 34px -10px rgba(45,212,218,0.85);
+}
+
+/* заголовок — живой градиентный перелив, но текст остаётся светлым и читаемым */
+.brand-headline {
+  background: linear-gradient(100deg, #ffffff 0%, #dfe6ff 38%, #bfe9ee 55%, #ffffff 78%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  animation: rise-in 0.9s var(--ease-soft) 0.16s forwards, sheen 12s linear infinite 1.2s;
+}
+
+@keyframes sheen {
+  from { background-position: 0% 0; }
+  to { background-position: 220% 0; }
+}
+
+.brand-sub { text-shadow: 0 1px 12px rgba(4,5,10,0.7); }
+
+/* график слегка «дышит» после отрисовки */
+.growth-chart svg {
+  filter: drop-shadow(0 12px 26px rgba(45,212,218,0.14));
+  transition: transform 0.6s var(--ease-soft);
+}
+.growth-chart:hover svg { transform: translateY(-3px) scale(1.01); }
+
+.chart-dot { filter: drop-shadow(0 0 8px rgba(45,212,218,0.85)); }
+
+/* тикер: аккуратное поочерёдное проявление + подсветка при наведении */
+.ticker li {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.35s var(--ease-soft), border-color 0.35s var(--ease-soft), transform 0.35s var(--ease-soft), color 0.35s var(--ease-soft);
+}
+.ticker li:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+  color: var(--ink-1);
+}
+.ticker .up { text-shadow: 0 0 12px rgba(111,227,171,0.35); }
+
+/* ссылки и кнопки — единая плавность */
+a, button, input, .tab, .card, .lesson-link, .course-card {
+  transition-timing-function: var(--ease-soft);
+}
+
+:focus-visible {
+  outline: 2px solid rgba(45,212,218,0.75);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* удобное выделение текста */
+::selection { background: rgba(124,92,255,0.35); color: #fff; }
+
+/* аккуратный скроллбар */
+* { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.14);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.26); background-clip: content-box; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .brand-mark, .brand-headline, .brand-sub, .growth-chart, .ticker,
+  .brand-mark__glyph, .aurora-bg::after {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+
+/* ============================================================
+   MOTION LAYER — фон и элементы двигаются постоянно и заметно
+   ============================================================ */
+
+/* туманности ходят по экрану заметно шире и быстрее */
+.blob-pink {
+  animation: drift-wide 26s cubic-bezier(.45,0,.55,1) infinite;
+}
+
+.blob-gold {
+  animation: drift-wide 34s cubic-bezier(.45,0,.55,1) infinite reverse;
+}
+
+.blob-teal {
+  animation: core-breathe 12s cubic-bezier(.45,0,.55,1) infinite reverse,
+             swirl 40s linear infinite;
+}
+
+.blob-violet {
+  animation: core-breathe 7s cubic-bezier(.45,0,.55,1) infinite,
+             core-wander 19s cubic-bezier(.45,0,.55,1) infinite;
+}
+
+@keyframes drift-wide {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  25%  { transform: translate3d(9vw, -6vh, 0) scale(1.12); }
+  50%  { transform: translate3d(4vw, 7vh, 0) scale(0.94); }
+  75%  { transform: translate3d(-7vw, 3vh, 0) scale(1.08); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes swirl {
+  from { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  50%  { transform: translate(-50%, -50%) rotate(180deg) scale(1.08); }
+  to   { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+}
+
+/* ядро мягко перемещается, а не стоит на месте */
+@keyframes core-wander {
+  0%   { margin: 0 0 0 0; }
+  25%  { margin: -3vh 0 0 4vw; }
+  50%  { margin: 2vh 0 0 -3vw; }
+  75%  { margin: 3vh 0 0 2vw; }
+  100% { margin: 0 0 0 0; }
+}
+
+/* лучи крутятся ощутимо */
+.aurora-bg::before {
+  animation: rays-spin 60s linear infinite, rays-glow 7s ease-in-out infinite;
+}
+
+.rays-2 {
+  animation: rays-spin-rev 90s linear infinite, rays-glow 11s ease-in-out infinite reverse;
+}
+
+/* бегущая волна света поверх фона */
+.aurora-bg .grain::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: linear-gradient(115deg,
+    rgba(45,212,218,0) 38%,
+    rgba(124,150,255,0.10) 48%,
+    rgba(45,212,218,0.07) 53%,
+    rgba(45,212,218,0) 62%);
+  animation: light-sweep 14s ease-in-out infinite;
+}
+
+@keyframes light-sweep {
+  0%   { transform: translate3d(-45%, -20%, 0); opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translate3d(45%, 20%, 0); opacity: 0; }
+}
+
+/* содержимое левой колонки мягко покачивается */
+.brand-pane__inner {
+  animation: pane-float 13s ease-in-out infinite 1.2s;
+}
+
+@keyframes pane-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -10px, 0); }
+}
+
+/* график: линия постоянно «течёт», точка пульсирует и плывёт */
+.chart-line {
+  animation: draw-line 2.2s cubic-bezier(.35,.02,.16,1) forwards 0.3s,
+             line-flow 6s ease-in-out infinite 2.6s;
+}
+
+@keyframes line-flow {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(45,212,218,0.35)); }
+  50% { filter: drop-shadow(0 0 12px rgba(124,92,255,0.75)); }
+}
+
+.chart-area {
+  animation: fade-in 1.5s ease forwards 1.4s, area-breathe 9s ease-in-out infinite 3s;
+}
+
+@keyframes area-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.grid-lines line {
+  animation: grid-pulse 6s ease-in-out infinite;
+}
+.grid-lines line:nth-child(2) { animation-delay: 1s; }
+.grid-lines line:nth-child(3) { animation-delay: 2s; }
+
+@keyframes grid-pulse {
+  0%, 100% { stroke: rgba(255,255,255,0.05); }
+  50% { stroke: rgba(160,200,255,0.16); }
+}
+
+/* тикер живёт: значения мягко подсвечиваются по очереди */
+.ticker li {
+  animation: chip-pulse 5.5s ease-in-out infinite;
+}
+.ticker li:nth-child(2) { animation-delay: 0.9s; }
+.ticker li:nth-child(3) { animation-delay: 1.8s; }
+.ticker li:nth-child(4) { animation-delay: 2.7s; }
+
+@keyframes chip-pulse {
+  0%, 100% {
+    background: rgba(255,255,255,0.035);
+    border-color: rgba(255,255,255,0.05);
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(45,212,218,0.28);
+    transform: translate3d(0, -3px, 0);
+  }
+}
+
+/* логотип-глиф крутится мягко */
+.brand-mark__glyph {
+  animation: soft-float 5s ease-in-out infinite 1s, glyph-hue 12s linear infinite;
+}
+
+@keyframes glyph-hue {
+  0%, 100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(40deg); }
+}
+
+/* заголовок переливается быстрее */
+.brand-headline {
+  animation: rise-in 0.9s var(--ease-soft) 0.16s forwards, sheen 6s linear infinite 1s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob, .blob-violet, .blob-teal, .blob-pink, .blob-gold,
+  .aurora-bg::before, .rays-2, .grain::after, .brand-pane__inner,
+  .chart-line, .chart-area, .grid-lines line, .ticker li,
+  .brand-mark__glyph, .brand-headline {
+    animation: none !important;
+  }
+}

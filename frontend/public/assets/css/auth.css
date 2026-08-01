@@ -347,3 +347,132 @@
 @media (max-width: 420px) {
   .auth-card { padding: 28px 22px 24px; border-radius: 18px; }
 }
+
+
+/* ============================================================
+   POLISH LAYER — карточка входа: плавность и читаемость
+   ============================================================ */
+
+.auth-pane { animation: rise-in 0.9s var(--ease-soft) 0.12s both; }
+
+.auth-card {
+  background: linear-gradient(160deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.035) 60%, rgba(255,255,255,0.05) 100%), rgba(10,12,22,0.42);
+  backdrop-filter: blur(34px) saturate(150%);
+  -webkit-backdrop-filter: blur(34px) saturate(150%);
+  box-shadow:
+    0 40px 90px -40px rgba(0,0,0,0.85),
+    0 1px 0 0 rgba(255,255,255,0.07) inset;
+  transition: transform 0.6s var(--ease-soft), box-shadow 0.6s var(--ease-soft);
+  overflow: hidden;
+  animation: soft-float 11s ease-in-out infinite 1.4s;
+}
+
+.auth-card:hover {
+  box-shadow:
+    0 48px 110px -44px rgba(0,0,0,0.9),
+    0 1px 0 0 rgba(255,255,255,0.1) inset;
+}
+
+/* мягкое движущееся свечение по верхней кромке карточки */
+.auth-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 8%;
+  width: 84%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(45,212,218,0) 0%, rgba(45,212,218,0.7) 30%, rgba(124,92,255,0.7) 60%, rgba(45,212,218,0) 100%);
+  background-size: 220% 100%;
+  opacity: 0.8;
+  pointer-events: none;
+  animation: edge-sweep 9s ease-in-out infinite;
+}
+
+@keyframes edge-sweep {
+  0%, 100% { background-position: 0% 0; }
+  50% { background-position: 200% 0; }
+}
+
+/* поочерёдное появление содержимого панели */
+.panel.is-active { animation: panel-in 0.45s var(--ease-soft); }
+
+.panel.is-active > * {
+  animation: rise-in 0.55s var(--ease-soft) both;
+}
+.panel.is-active > *:nth-child(1) { animation-delay: 0.02s; }
+.panel.is-active > *:nth-child(2) { animation-delay: 0.06s; }
+.panel.is-active > *:nth-child(3) { animation-delay: 0.10s; }
+.panel.is-active > *:nth-child(4) { animation-delay: 0.14s; }
+.panel.is-active > *:nth-child(5) { animation-delay: 0.18s; }
+.panel.is-active > *:nth-child(6) { animation-delay: 0.22s; }
+.panel.is-active > *:nth-child(7) { animation-delay: 0.26s; }
+.panel.is-active > *:nth-child(8) { animation-delay: 0.30s; }
+
+.tab { transition: color 0.3s var(--ease-soft), transform 0.3s var(--ease-soft); }
+.tab:hover { color: var(--ink-0); }
+.tab.is-active:hover { color: #080b16; }
+
+.tab-indicator {
+  transition: transform 0.45s var(--ease-soft);
+  box-shadow: 0 8px 22px -10px rgba(45,212,218,0.8);
+}
+
+.field input {
+  transition: border-color 0.3s var(--ease-soft), background 0.3s var(--ease-soft), box-shadow 0.3s var(--ease-soft);
+}
+
+.field input:focus {
+  box-shadow: 0 0 0 3px rgba(45,212,218,0.14);
+}
+
+.field label { transition: top 0.24s var(--ease-soft), font-size 0.24s var(--ease-soft), color 0.24s var(--ease-soft); }
+
+.checkbox-box { transition: background 0.3s var(--ease-soft), border-color 0.3s var(--ease-soft), transform 0.3s var(--ease-soft); }
+.checkbox:hover .checkbox-box { border-color: rgba(255,255,255,0.4); }
+.checkbox input:checked + .checkbox-box { transform: scale(1.06); }
+
+/* кнопка: мягкий блик, проходящий по поверхности */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(120deg, var(--gold), var(--teal) 65%, var(--violet) 130%);
+  background-size: 190% 100%;
+  transition: transform 0.3s var(--ease-soft), box-shadow 0.35s var(--ease-soft), background-position 0.6s var(--ease-soft);
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  left: -60%;
+  width: 45%;
+  background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-18deg);
+  animation: btn-shine 5.5s ease-in-out infinite 1.5s;
+  pointer-events: none;
+}
+
+@keyframes btn-shine {
+  0% { left: -60%; }
+  55%, 100% { left: 130%; }
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background-position: 60% 0;
+  box-shadow: 0 20px 44px -16px rgba(45,212,218,0.6);
+}
+
+.btn-primary:active { transform: translateY(0) scale(0.985); }
+
+.link-strong { transition: color 0.25s var(--ease-soft), opacity 0.25s var(--ease-soft); }
+.link-strong:hover { opacity: 0.85; }
+
+.form-message { transition: color 0.3s var(--ease-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-pane, .auth-card, .auth-card::before, .panel.is-active,
+  .panel.is-active > *, .btn-primary::before {
+    animation: none !important;
+    opacity: 1;
+  }
+}
