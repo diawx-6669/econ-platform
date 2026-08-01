@@ -50,20 +50,24 @@ button { font-family: inherit; }
   z-index: 0;
   overflow: hidden;
   background:
-    radial-gradient(120% 90% at 58% 46%, rgba(120,150,255,0.10) 0%, rgba(8,10,18,0) 55%),
-    radial-gradient(90% 70% at 18% 18%, rgba(90,80,190,0.10) 0%, rgba(8,10,18,0) 60%),
-    radial-gradient(140% 120% at 50% 120%, #0a0c16 0%, #04050a 70%);
+    radial-gradient(120% 90% at 46% 44%, rgba(120,150,255,0.11) 0%, rgba(8,10,18,0) 56%),
+    radial-gradient(90% 70% at 16% 14%, rgba(96,84,200,0.12) 0%, rgba(8,10,18,0) 62%),
+    radial-gradient(80% 70% at 92% 84%, rgba(45,212,218,0.07) 0%, rgba(8,10,18,0) 60%),
+    radial-gradient(140% 120% at 50% 120%, #090c17 0%, #04050a 72%);
 }
 
+/* мягкая виньетка + лёгкое цветокорректирующее свечение сверху */
 .aurora-bg::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(120% 100% at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.72) 100%);
+  background:
+    radial-gradient(120% 100% at 50% 50%, rgba(0,0,0,0) 38%, rgba(0,0,0,0.74) 100%),
+    linear-gradient(180deg, rgba(80,110,220,0.06) 0%, rgba(0,0,0,0) 34%);
 }
 
-/* animated canvas with drifting shards + sparks */
+/* animated canvas: nebula, stars, dust, shards */
 #bg-canvas {
   position: absolute;
   inset: 0;
@@ -72,7 +76,6 @@ button { font-family: inherit; }
   display: block;
 }
 
-/* the light core that breathes behind everything */
 .blob {
   position: absolute;
   border-radius: 50%;
@@ -80,94 +83,141 @@ button { font-family: inherit; }
   pointer-events: none;
 }
 
+/* дышащее ядро */
 .blob-violet {
-  width: 46vw; height: 46vw;
-  min-width: 420px; min-height: 420px;
-  top: 50%; left: 58%;
+  width: 44vw; height: 44vw;
+  min-width: 400px; min-height: 400px;
+  top: 50%; left: 46%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(200,215,255,0.45) 8%, rgba(120,150,255,0.18) 22%, rgba(80,90,200,0.06) 42%, transparent 68%);
-  filter: blur(6px);
-  animation: core-breathe 7s ease-in-out infinite;
+  background: radial-gradient(circle,
+    rgba(255,255,255,0.92) 0%,
+    rgba(214,226,255,0.42) 7%,
+    rgba(140,168,255,0.18) 20%,
+    rgba(88,98,205,0.07) 40%,
+    transparent 68%);
+  filter: blur(8px);
+  animation: core-breathe 14s cubic-bezier(.45,0,.55,1) infinite;
 }
 
 .blob-teal {
-  width: 70vw; height: 70vw;
-  top: 50%; left: 58%;
+  width: 74vw; height: 74vw;
+  top: 50%; left: 46%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(140,170,255,0.16) 0%, transparent 62%);
-  filter: blur(60px);
-  animation: core-breathe 11s ease-in-out infinite reverse;
+  background: radial-gradient(circle, rgba(140,172,255,0.15) 0%, rgba(90,120,230,0.05) 38%, transparent 66%);
+  filter: blur(70px);
+  animation: core-breathe 22s cubic-bezier(.45,0,.55,1) infinite reverse;
 }
 
 .blob-pink {
-  width: 52vw; height: 52vw;
-  top: 12%; left: -8%;
-  background: radial-gradient(circle, rgba(124,92,255,0.16) 0%, transparent 65%);
-  filter: blur(90px);
-  animation: drift-slow 26s ease-in-out infinite;
+  width: 56vw; height: 56vw;
+  top: 8%; left: -12%;
+  background: radial-gradient(circle, rgba(124,92,255,0.17) 0%, rgba(124,92,255,0.05) 40%, transparent 68%);
+  filter: blur(100px);
+  animation: drift-slow 52s cubic-bezier(.45,0,.55,1) infinite;
 }
 
 .blob-gold {
-  width: 40vw; height: 40vw;
-  bottom: -12%; left: 26%;
-  background: radial-gradient(circle, rgba(45,212,218,0.12) 0%, transparent 66%);
-  filter: blur(100px);
-  animation: drift-slow 34s ease-in-out infinite reverse;
+  width: 44vw; height: 44vw;
+  bottom: -14%; left: 24%;
+  background: radial-gradient(circle, rgba(45,212,218,0.13) 0%, rgba(45,160,218,0.04) 42%, transparent 70%);
+  filter: blur(110px);
+  animation: drift-slow 68s cubic-bezier(.45,0,.55,1) infinite reverse;
 }
 
-/* thin light rays sweeping out of the core */
-.aurora-bg::before {
+/* объёмные лучи из ядра — два слоя, вращаются в разные стороны */
+.aurora-bg::before,
+.rays-2 {
   content: "";
   position: absolute;
-  top: 50%; left: 58%;
-  width: 150vmax; height: 150vmax;
+  top: 50%; left: 46%;
+  width: 165vmax; height: 165vmax;
   transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.aurora-bg::before {
   background:
     conic-gradient(from 0deg,
-      rgba(255,255,255,0.055) 0deg, transparent 8deg,
-      rgba(255,255,255,0.035) 34deg, transparent 46deg,
-      rgba(255,255,255,0.05) 96deg, transparent 108deg,
-      rgba(255,255,255,0.03) 170deg, transparent 184deg,
-      rgba(255,255,255,0.045) 250deg, transparent 262deg,
-      rgba(255,255,255,0.03) 320deg, transparent 336deg);
-  -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,0.9) 0%, transparent 45%);
-  mask-image: radial-gradient(circle, rgba(0,0,0,0.9) 0%, transparent 45%);
-  animation: rays-spin 90s linear infinite;
-  pointer-events: none;
+      rgba(255,255,255,0.05) 0deg, transparent 7deg,
+      rgba(190,210,255,0.032) 31deg, transparent 43deg,
+      rgba(255,255,255,0.046) 92deg, transparent 105deg,
+      rgba(170,200,255,0.028) 168deg, transparent 182deg,
+      rgba(255,255,255,0.042) 246deg, transparent 259deg,
+      rgba(200,215,255,0.026) 318deg, transparent 334deg);
+  -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.35) 26%, transparent 48%);
+  mask-image: radial-gradient(circle, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.35) 26%, transparent 48%);
+  animation: rays-spin 240s linear infinite, rays-glow 17s ease-in-out infinite;
+}
+
+.rays-2 {
+  background:
+    conic-gradient(from 40deg,
+      rgba(140,180,255,0.03) 0deg, transparent 12deg,
+      rgba(255,255,255,0.024) 64deg, transparent 78deg,
+      rgba(160,190,255,0.028) 140deg, transparent 156deg,
+      rgba(255,255,255,0.022) 214deg, transparent 232deg,
+      rgba(150,185,255,0.026) 292deg, transparent 308deg);
+  -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.25) 30%, transparent 52%);
+  mask-image: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.25) 30%, transparent 52%);
+  animation: rays-spin-rev 380s linear infinite;
 }
 
 @keyframes core-breathe {
-  0%, 100% { opacity: 0.85; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.07); }
+  0%, 100% { opacity: 0.82; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
 }
 
 @keyframes drift-slow {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(4vw, -3vh) scale(1.08); }
+  33% { transform: translate(3vw, -2.5vh) scale(1.06); }
+  66% { transform: translate(-2vw, 2vh) scale(0.97); }
 }
 
 @keyframes rays-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
   to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes rays-spin-rev {
+  from { transform: translate(-50%, -50%) rotate(360deg); }
+  to { transform: translate(-50%, -50%) rotate(0deg); }
+}
+
+@keyframes rays-glow {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
 }
 
 .grain {
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
+  opacity: 0.75;
   pointer-events: none;
+  animation: grain-shift 8s steps(6) infinite;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-1.5%, 1%); }
+  40% { transform: translate(1%, -1.5%); }
+  60% { transform: translate(-1%, -1%); }
+  80% { transform: translate(1.5%, 1%); }
+  100% { transform: translate(0, 0); }
 }
 
 @media (max-width: 980px) {
   .blob-violet { left: 60%; top: 32%; }
   .blob-teal { left: 60%; top: 32%; }
-  .aurora-bg::before { left: 60%; top: 32%; }
+  .aurora-bg::before, .rays-2 { left: 60%; top: 32%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .blob, .aurora-bg::before { animation: none; }
-  #bg-canvas { display: none; }
+  .blob, .aurora-bg::before, .rays-2, .grain { animation: none; }
 }
+
 
 /* ---------- Layout shell ---------- */
 
