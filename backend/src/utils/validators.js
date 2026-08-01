@@ -31,4 +31,29 @@ function validateLogin(body) {
   return { valid: Object.keys(errors).length === 0, errors };
 }
 
-module.exports = { validateRegister, validateLogin };
+function validateProfileUpdate(body) {
+  const errors = {};
+  const { name } = body || {};
+
+  if (!name || String(name).trim().length < 2) {
+    errors.name = "Имя должно быть не короче 2 символов";
+  }
+
+  return { valid: Object.keys(errors).length === 0, errors };
+}
+
+function validatePasswordChange(body) {
+  const errors = {};
+  const { currentPassword, newPassword } = body || {};
+
+  if (!currentPassword) {
+    errors.currentPassword = "Введите текущий пароль";
+  }
+  if (!newPassword || String(newPassword).length < 8) {
+    errors.newPassword = "Новый пароль должен быть не короче 8 символов";
+  }
+
+  return { valid: Object.keys(errors).length === 0, errors };
+}
+
+module.exports = { validateRegister, validateLogin, validateProfileUpdate, validatePasswordChange };

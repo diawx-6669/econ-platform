@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const { validateRegister, validateLogin } = require("../utils/validators");
+const { validateRegister, validateLogin, validateProfileUpdate, validatePasswordChange } = require("../utils/validators");
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
@@ -72,4 +72,45 @@ async function me(req, res, next) {
   }
 }
 
-module.exports = { register, login, me };
+async function updateProfile(req, res, next) {
+  try {
+    const { valid, errors } = validateProfileUpdate(req.body);
+    if (!valid) {
+      return res.status(422).json({ message: "Проверьте правильность заполнения полей", errors });
+    }
+
+    const user = User.updateName(req.userId, req.body.name.trim());
+    if (!user) return res.status(404).json({ message: "Пользователь не найден" });
+
+    return res.status(200).json({ user: User.toPublic(user) });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function changePassword(req, res, next) {
+  try {
+    const { valid, errors } = validatePasswordChange(req.body);
+    if (!valid) {
+      return res.status(422).json({ message: "Проверьте правильность заполнения полей", errors });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+    const user = User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: "Пользователь не найден" });
+
+    const passwordMatches = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!passwordMatches) {
+      return res.status(401).json({ message: "Текущий пароль указан неверно" });
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
+    User.updatePasswordHash(req.userId, passwordHash);
+
+    return res.status(200).json({ message: "Пароль успешно изменён" });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+module.exports = { register, login, me, updateProfile, changePassword };

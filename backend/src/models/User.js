@@ -22,6 +22,16 @@ const User = {
     return user;
   },
 
+  updateName(id, name) {
+    db.get("users").find({ id }).assign({ name }).write();
+    return this.findById(id);
+  },
+
+  updatePasswordHash(id, passwordHash) {
+    db.get("users").find({ id }).assign({ passwordHash }).write();
+    return this.findById(id);
+  },
+
   toPublic(user) {
     if (!user) return null;
     const { passwordHash, ...publicUser } = user;

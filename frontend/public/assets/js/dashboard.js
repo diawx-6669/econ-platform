@@ -51,11 +51,30 @@
   // 1. Course & lesson content
   // ---------------------------------------------------------------
 
+  var ICONS = {
+    basics: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+    market: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
+    money: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.3 9.3c0-1.3 1.2-2.3 2.7-2.3s2.7.9 2.7 2c0 1.3-1.2 1.8-2.7 2.3S9.3 12.3 9.3 13.8c0 1.1 1.2 2 2.7 2s2.7-1 2.7-2.3"/></svg>',
+    personal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a1 1 0 0 0 1-1v-2"/><path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3"/><circle cx="17" cy="14" r="1.4"/></svg>',
+    trade: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+    labor: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 13h20"/></svg>',
+    profile: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.6-4 5-6 8-6s6.4 2 8 6"/></svg>',
+    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+    trophy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 5H4a3 3 0 0 0 4 3M16 5h4a3 3 0 0 1-4 3"/><path d="M12 13v4M9 21h6M9.5 21c0-2 1-3 2.5-4 1.5 1 2.5 2 2.5 4"/></svg>',
+    flame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a4 4 0 0 0 8 0c0-1-.4-2-1-3 2 1 3 3 3 6a6 6 0 0 1-12 0c0-4 2-6 4-10z"/></svg>',
+    star: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.1 6.6 7.2.9-5.3 4.9 1.5 7.1L12 17.9 5.5 21.5l1.5-7.1-5.3-4.9 7.2-.9L12 2z"/></svg>',
+    gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.6 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1z"/></svg>',
+    chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>'
+  };
+
   var COURSES = [
     {
       id: "basics",
       theme: "violet",
-      icon: "🧠",
+      icon: ICONS.basics,
       title: "Основы экономики",
       desc: "Зачем вообще нужна экономика, ограниченность ресурсов и альтернативные издержки.",
       lessons: [
@@ -157,7 +176,7 @@
     {
       id: "market",
       theme: "teal",
-      icon: "🛒",
+      icon: ICONS.market,
       title: "Спрос и предложение",
       desc: "Как формируется рыночная цена, что такое равновесие и эластичность.",
       lessons: [
@@ -255,7 +274,7 @@
     {
       id: "money",
       theme: "gold",
-      icon: "💰",
+      icon: ICONS.money,
       title: "Деньги и инфляция",
       desc: "Почему цены растут, что такое покупательная способность и роль центробанка.",
       lessons: [
@@ -348,7 +367,7 @@
     {
       id: "personal",
       theme: "pink",
-      icon: "🐷",
+      icon: ICONS.personal,
       title: "Личные финансы",
       desc: "Сложный процент, бюджетирование и практические инструменты для повседневных решений.",
       lessons: [
@@ -410,6 +429,215 @@
           ]
         }
       ]
+    },
+    {
+      id: "trade",
+      theme: "blue",
+      icon: ICONS.trade,
+      title: "Международная торговля",
+      desc: "Зачем страны торгуют друг с другом, сравнительное преимущество и последствия тарифов.",
+      lessons: [
+        {
+          id: "trade-1",
+          title: "Сравнительное преимущество",
+          kind: "theory",
+          blocks: [
+            { p: "Абсолютное преимущество — способность производить товар с меньшими затратами ресурсов, чем у другого производителя. Сравнительное преимущество — способность производить товар с меньшими альтернативными издержками." },
+            { p: "Именно сравнительное, а не абсолютное преимущество объясняет, почему торговля выгодна даже стране, которая производит всё менее эффективно, чем партнёр." },
+            { callout: "fact", text: "Классический пример: даже если страна А эффективнее страны Б в производстве и тканей, и вина, обеим выгодно специализироваться каждой на своём — там, где альтернативные издержки ниже." }
+          ],
+          quiz: [
+            {
+              q: "Что лежит в основе выгоды от международной торговли по классической теории?",
+              options: [
+                "Абсолютное преимущество каждой страны во всём",
+                "Сравнительное преимущество — специализация там, где ниже альтернативные издержки",
+                "Государственные субсидии экспортёрам",
+                "Одинаковая производительность труда во всех странах"
+              ],
+              correct: 1,
+              explain: "Даже без абсолютного преимущества страна выигрывает от специализации на товарах с наименьшими альтернативными издержками — это и есть сравнительное преимущество."
+            },
+            {
+              q: "Страна А производит 1 тонну пшеницы за 2 часа или 1 автомобиль за 10 часов. Что дешевле для неё в единицах пшеницы — произвести 1 автомобиль?",
+              options: ["2 тонны пшеницы", "5 тонн пшеницы", "10 тонн пшеницы", "0.2 тонны пшеницы"],
+              correct: 1,
+              explain: "Альтернативные издержки автомобиля = 10 часов / 2 часа за тонну = 5 тонн пшеницы, от которых страна отказывается."
+            }
+          ]
+        },
+        {
+          id: "trade-2",
+          title: "Тренажёр: тариф на импорт",
+          kind: "interactive-tariff",
+          blocks: [
+            { p: "Тариф — это налог на импортный товар. Он поднимает цену для покупателей внутри страны выше мировой цены и сокращает объём импорта." },
+            { ul: [
+              "Отечественные производители выигрывают — могут продавать больше по более высокой цене",
+              "Потребители проигрывают — платят больше и покупают меньше",
+              "Бюджет получает доход от тарифа, но часть общей выгоды общества теряется безвозвратно"
+            ] },
+            { callout: "tip", text: "Подвигайте ползунок тарифа ниже и посмотрите, как меняются внутренняя цена, объём импорта и доходы бюджета." }
+          ],
+          quiz: [
+            {
+              q: "Что происходит с внутренней ценой товара после введения тарифа на его импорт?",
+              options: ["Снижается до мировой цены", "Растёт выше мировой цены", "Не меняется", "Становится равна нулю"],
+              correct: 1,
+              explain: "Тариф — это дополнительные издержки на единицу импорта, поэтому цена для внутренних покупателей поднимается выше мировой."
+            },
+            {
+              q: "Кто выигрывает от введения тарифа на импорт внутри страны?",
+              options: ["Только иностранные производители", "Отечественные производители и бюджет", "Только потребители", "Все участники рынка одинаково"],
+              correct: 1,
+              explain: "Отечественные производители получают более высокую цену и больший объём продаж, а бюджет — доход от собранных пошлин."
+            }
+          ]
+        },
+        {
+          id: "trade-3",
+          title: "Валютный курс и торговый баланс",
+          kind: "theory",
+          blocks: [
+            { p: "Валютный курс — цена одной валюты, выраженная в другой. Он влияет на то, насколько дёшевы или дороги отечественные товары для иностранных покупателей, и наоборот." },
+            { h3: "Как курс влияет на торговлю" },
+            { ul: [
+              "Ослабление национальной валюты делает экспорт дешевле для иностранцев, а импорт — дороже для внутреннего рынка",
+              "Укрепление валюты — наоборот, импорт дешевеет, экспорт дорожает для покупателей за рубежом"
+            ] },
+            { callout: "warn", text: "Торговый баланс — это разница между экспортом и импортом. Дефицит не всегда «плохо»: он может отражать активные инвестиции в экономику, а не только слабость экспорта." }
+          ],
+          quiz: [
+            {
+              q: "Национальная валюта ослабла на 15%. Как это повлияет на конкурентоспособность отечественного экспорта?",
+              options: [
+                "Экспорт станет менее конкурентоспособным",
+                "Экспорт станет более конкурентоспособным — товары дешевле для иностранцев",
+                "Никак не повлияет",
+                "Импорт подешевеет"
+              ],
+              correct: 1,
+              explain: "Более слабая валюта снижает цену отечественных товаров в иностранной валюте, повышая их конкурентоспособность за рубежом."
+            },
+            {
+              q: "Что показывает торговый баланс страны?",
+              options: [
+                "Разницу между экспортом и импортом",
+                "Общий долг государства",
+                "Курс национальной валюты",
+                "Уровень безработицы"
+              ],
+              correct: 0,
+              explain: "Торговый баланс — это экспорт минус импорт за период. Положительное значение — профицит, отрицательное — дефицит."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "labor",
+      theme: "green",
+      icon: ICONS.labor,
+      title: "Рынок труда и безработица",
+      desc: "Как определяется зарплата, какие бывают виды безработицы и что такое минимальная оплата труда.",
+      lessons: [
+        {
+          id: "labor-1",
+          title: "Виды безработицы",
+          kind: "theory",
+          blocks: [
+            { p: "Рынок труда работает так же, как и рынок товаров: есть «спрос» на труд со стороны работодателей и «предложение» труда со стороны работников, а зарплата — это цена труда." },
+            { h3: "Три основных вида безработицы" },
+            { ul: [
+              "Фрикционная — люди временно между работами, ищут более подходящий вариант",
+              "Структурная — навыки работников не соответствуют требованиям рынка (например, из-за автоматизации)",
+              "Циклическая — возникает во время спада экономики, когда падает совокупный спрос на труд"
+            ] },
+            { callout: "fact", text: "Полная занятость не означает нулевую безработицу — фрикционная и структурная безработица существуют почти всегда, даже в здоровой экономике." }
+          ],
+          quiz: [
+            {
+              q: "Работник уволился, чтобы найти более подходящую вакансию, и ищет работу две недели. Это пример какой безработицы?",
+              options: ["Структурной", "Циклической", "Фрикционной", "Сезонной"],
+              correct: 2,
+              explain: "Кратковременный поиск более подходящей работы — классический пример фрикционной безработицы."
+            },
+            {
+              q: "Из-за автоматизации производства целая профессия почти исчезла, и работникам нужно переучиваться. Это пример какой безработицы?",
+              options: ["Фрикционной", "Структурной", "Циклической", "Такой безработицы не существует"],
+              correct: 1,
+              explain: "Несоответствие навыков работников новым требованиям рынка труда — признак структурной безработицы."
+            }
+          ]
+        },
+        {
+          id: "labor-2",
+          title: "Тренажёр: минимальная зарплата",
+          kind: "interactive-minwage",
+          blocks: [
+            { p: "Минимальная зарплата — это «пол» цены труда, установленный государством. Если он выше равновесной зарплаты, часть желающих работать не может найти работу — возникает безработица." },
+            { callout: "tip", text: "Подвигайте ползунок минимальной зарплаты выше равновесия и посмотрите, как растёт избыток предложения труда (безработица)." }
+          ],
+          quiz: [
+            {
+              q: "Что произойдёт, если минимальная зарплата установлена НИЖЕ равновесной зарплаты рынка труда?",
+              options: [
+                "Она не окажет никакого эффекта на рынок",
+                "Возникнет дефицит работников",
+                "Все зарплаты автоматически станут минимальными",
+                "Спрос на труд упадёт до нуля"
+              ],
+              correct: 0,
+              explain: "Если установленный минимум ниже точки, где рынок и так уравновешен, ограничение не связывает рынок и ни на что не влияет."
+            },
+            {
+              q: "Минимальная зарплата установлена значительно ВЫШЕ равновесной. Что произойдёт с количеством рабочих мест по сравнению с равновесием?",
+              options: [
+                "Число рабочих мест вырастет",
+                "Число рабочих мест сократится — часть желающих работать не найдёт вакансий",
+                "Ничего не изменится",
+                "Зарплаты снизятся сами по себе"
+              ],
+              correct: 1,
+              explain: "Как и любой «потолок» или «пол» цены выше равновесия, завышенная минимальная зарплата снижает число нанимаемых работников и создаёт избыток предложения труда."
+            }
+          ]
+        },
+        {
+          id: "labor-3",
+          title: "Закон Оукена: безработица и ВВП",
+          kind: "theory",
+          blocks: [
+            { p: "Закон Оукена описывает эмпирическую связь между безработицей и объёмом производства: каждый процентный пункт роста безработицы сверх естественного уровня связан с потерей нескольких процентов потенциального ВВП." },
+            { formula: "Примерное правило: рост безработицы на 1 п.п. ≈ падение ВВП примерно на 2 п.п. относительно потенциала" },
+            { callout: "fact", text: "Закон Оукена — не точный физический закон, а статистическая закономерность: коэффициент отличается по странам и периодам, но направление связи устойчиво." }
+          ],
+          quiz: [
+            {
+              q: "Согласно закону Оукена, что обычно происходит с ВВП при резком росте безработицы?",
+              options: [
+                "ВВП растёт",
+                "ВВП падает относительно потенциального уровня",
+                "ВВП не связан с безработицей",
+                "Связь работает только в обратную сторону"
+              ],
+              correct: 1,
+              explain: "Рост безработицы означает, что часть трудовых ресурсов не используется — производство падает ниже потенциального уровня."
+            },
+            {
+              q: "Является ли закон Оукена точным математическим тождеством?",
+              options: [
+                "Да, коэффициент всегда одинаков",
+                "Нет, это эмпирическая закономерность, коэффициент варьируется",
+                "Он относится только к денежно-кредитной политике",
+                "Он используется только для расчёта инфляции"
+              ],
+              correct: 1,
+              explain: "Закон Оукена — это статистически наблюдаемая, но не жёстко фиксированная связь; её сила отличается между странами и периодами."
+            }
+          ]
+        }
+      ]
     }
   ];
 
@@ -444,9 +672,12 @@
   var streakNumEl = document.getElementById("streak-num");
   var starsNumEl = document.getElementById("stars-num");
 
-  userNameEl.textContent = user.name || "Ученик";
-  userInitialEl.textContent = (user.name || "У").trim().charAt(0).toUpperCase();
-  userEmailEl.textContent = user.email || "";
+  function refreshUserChrome() {
+    userNameEl.textContent = user.name || "Ученик";
+    userInitialEl.textContent = (user.name || "У").trim().charAt(0).toUpperCase();
+    userEmailEl.textContent = user.email || "";
+  }
+  refreshUserChrome();
 
   document.getElementById("user-chip").addEventListener("click", function (e) {
     e.stopPropagation();
@@ -459,6 +690,12 @@
     localStorage.removeItem(AUTH_KEY);
     window.location.href = "index.html";
   });
+  document.getElementById("profile-link-btn").addEventListener("click", function () {
+    document.getElementById("user-dropdown").classList.remove("is-open");
+    navigate({ view: "profile" });
+  });
+  var profileNavBtn = document.getElementById("profile-nav-btn");
+  if (profileNavBtn) profileNavBtn.addEventListener("click", function () { navigate({ view: "profile" }); });
 
   var burger = document.getElementById("burger-btn");
   var sidebarEl = document.getElementById("sidebar");
@@ -476,11 +713,14 @@
   // 3. Sidebar navigation
   // ---------------------------------------------------------------
 
-  function renderSidebar(activeLessonId) {
+  function renderSidebar(activeLessonId, isProfile) {
     var html = "";
-    html += '<button class="sidebar__nav-item' + (!activeLessonId ? " is-active" : "") + '" data-go-overview>' +
+    html += '<button class="sidebar__nav-item' + (!activeLessonId && !isProfile ? " is-active" : "") + '" data-go-overview>' +
       '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>' +
       'Обзор</button>';
+    html += '<button class="sidebar__nav-item' + (isProfile ? " is-active" : "") + '" data-go-profile>' +
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.6-4 5-6 8-6s6.4 2 8 6"/></svg>' +
+      'Профиль</button>';
     html += '<div class="sidebar__label">Курсы</div>';
 
     COURSES.forEach(function (course) {
@@ -512,6 +752,10 @@
       closeSidebar();
       navigate({ view: "overview" });
     });
+    sidebarNav.querySelector("[data-go-profile]").addEventListener("click", function () {
+      closeSidebar();
+      navigate({ view: "profile" });
+    });
     sidebarNav.querySelectorAll("[data-toggle-course]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var group = btn.closest(".course-group");
@@ -539,7 +783,7 @@
 
     var html = "";
     html += '<div class="hero-card">';
-    html += '<h1>Привет, ' + escapeHtml((user.name || "").split(" ")[0] || "будущий экономист") + ' 👋</h1>';
+    html += '<h1>Привет, ' + escapeHtml((user.name || "").split(" ")[0] || "будущий экономист") + '</h1>';
     html += '<p>Проходите короткие уроки, тренируйтесь на интерактивных симуляторах и проверяйте себя квизами — от базовых понятий до личных финансов.</p>';
     html += '<div class="hero-stats">';
     html += '<div><div class="hero-stat__num">' + done + ' / ' + total + '</div><div class="hero-stat__label">уроков пройдено</div></div>';
@@ -688,10 +932,10 @@
       if (confirmed) {
         var isCorrect = selected === q.correct;
         html += '<div class="quiz-reveal is-visible">';
-        html += mascotHTML(isCorrect ? "happy" : "sad", isCorrect ? pick(["Отлично! Именно так 🎉", "Верно! Ты молодец!", "Точно в цель!"]) : pick(["Почти! Смотри объяснение 👀", "Не в этот раз, но это нормально!", "Бывает! Разберём вместе"]));
+        html += mascotHTML(isCorrect ? "happy" : "sad", isCorrect ? pick(["Отлично! Именно так", "Верно! Ты молодец!", "Точно в цель!"]) : pick(["Почти! Смотри объяснение ниже", "Не в этот раз, но это нормально!", "Бывает! Разберём вместе"]));
         html += '<div class="quiz-explain is-visible">' + q.explain + '</div>';
         html += '</div>';
-        html += '<div class="quiz-footer"><button class="btn btn-grad" id="quiz-next">' + (current === qs.length - 1 ? "Завершить 🏁" : "Дальше →") + '</button></div>';
+        html += '<div class="quiz-footer"><button class="btn btn-grad" id="quiz-next">' + (current === qs.length - 1 ? "Завершить" : "Дальше →") + '</button></div>';
       } else {
         html += '<div class="quiz-footer"><button class="btn btn-grad" id="quiz-confirm"' + (selected === null ? " disabled" : "") + '>Подтвердить ответ</button></div>';
       }
@@ -792,7 +1036,9 @@
       mouth = '<ellipse cx="38" cy="46" rx="6" ry="4" fill="#080b16"/>';
     }
     if (mood === "party") {
-      extra = '<text x="10" y="14" font-size="14">✨</text><text x="58" y="18" font-size="14">✨</text><text x="6" y="55" font-size="12">⭐</text>';
+      extra = '<path d="M9 5l1 2.4L12.4 8.4 10 9.4 9 11.8 8 9.4 5.6 8.4 8 7.4z" fill="#f2b84b"/>' +
+        '<path d="M60 12l0.8 1.9L62.7 14.7 60.8 15.5 60 17.4 59.2 15.5 57.3 14.7 59.2 13.9z" fill="#2dd4da"/>' +
+        '<circle cx="7" cy="55" r="2.2" fill="#e94f9e"/>';
     }
     var owl =
       '<svg viewBox="0 0 76 70" xmlns="http://www.w3.org/2000/svg">' +
@@ -1326,6 +1572,400 @@
     draw();
   };
 
+  // ---- 7.7 Import tariff simulator ----
+  WIDGETS["interactive-tariff"] = function (mount) {
+    var W = 420, H = 300, PAD = 40;
+    // Domestic demand: P = 100 - Q  |  Domestic supply: P = 10 + Q  |  world price fixed
+    var demA = 100, demB = 1, supA = 10, supB = 1;
+    var worldPrice = 40;
+    var maxQ = 100, maxP = 110;
+
+    mount.innerHTML =
+      '<div class="widget">' +
+      '<div class="widget__title"><span class="dot"></span>Тренажёр: тариф на импорт</div>' +
+      '<div class="widget__hint">При мировой цене ниже внутренней равновесной страна импортирует товар. Добавьте тариф и посмотрите, как это отражается на цене, импорте и доходах бюджета.</div>' +
+      '<div class="widget__grid">' +
+      '<div>' +
+      '<div class="control"><div class="control__label"><span>Тариф на единицу товара</span><b id="tf-val">0₽</b></div>' +
+      '<input type="range" id="tf-slider" min="0" max="' + (demA - worldPrice) + '" value="0"></div>' +
+      '<div class="readout" id="tf-readout"></div>' +
+      '</div>' +
+      '<div class="chart-box" id="tf-chart"></div>' +
+      '</div></div>';
+
+    var slider = mount.querySelector("#tf-slider");
+    var valEl = mount.querySelector("#tf-val");
+    var chartEl = mount.querySelector("#tf-chart");
+    var readoutEl = mount.querySelector("#tf-readout");
+
+    function draw() {
+      var tariff = Number(slider.value);
+      valEl.textContent = tariff + "₽";
+      var domesticPrice = worldPrice + tariff;
+
+      var qd = Math.max(0, demA - demB * domesticPrice);
+      var qs = Math.max(0, (domesticPrice - supA) / supB);
+      var imports = Math.max(0, qd - qs);
+      var revenue = tariff * imports;
+
+      var x0 = PAD, y0 = H - PAD;
+      function toPx(q) { return x0 + (q / maxQ) * (W - PAD * 2); }
+      function toPy(p) { return y0 - (p / maxP) * (H - PAD * 2); }
+
+      var qDemandEnd = Math.min(maxQ, demA / demB);
+      var demandPts = [[0, demA], [qDemandEnd, demA - demB * qDemandEnd]];
+      var qSupplyEnd = Math.min(maxQ, (maxP - supA) / supB);
+      var supplyPts = [[0, supA], [qSupplyEnd, supA + supB * qSupplyEnd]];
+      function lineD(pts) { return "M" + pts.map(function (p) { return toPx(p[0]).toFixed(1) + "," + toPy(p[1]).toFixed(1); }).join(" L"); }
+
+      var inner = "";
+      inner += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + (W - PAD) + '" y2="' + y0 + '" stroke="rgba(255,255,255,0.18)"/>';
+      inner += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + PAD + '" stroke="rgba(255,255,255,0.18)"/>';
+      inner += '<text x="' + (W - PAD) + '" y="' + (y0 + 18) + '" fill="#7c839c" font-size="10" text-anchor="end">Объём (Q)</text>';
+      inner += '<text x="' + (x0 - 6) + '" y="' + (PAD - 6) + '" fill="#7c839c" font-size="10" text-anchor="start">Цена (P)</text>';
+
+      if (imports > 0.1) {
+        inner += '<rect x="' + toPx(qs).toFixed(1) + '" y="' + toPy(domesticPrice).toFixed(1) + '" width="' + (toPx(qd) - toPx(qs)).toFixed(1) + '" height="2.5" fill="#4f9eff"/>';
+      }
+      inner += '<line x1="' + x0 + '" y1="' + toPy(worldPrice).toFixed(1) + '" x2="' + (W - PAD) + '" y2="' + toPy(worldPrice).toFixed(1) + '" stroke="rgba(255,255,255,0.28)" stroke-dasharray="4 4"/>';
+      inner += '<text x="' + (x0 + 4) + '" y="' + (toPy(worldPrice) - 5) + '" fill="#7c839c" font-size="9">мировая цена</text>';
+      if (tariff > 0) {
+        inner += '<line x1="' + x0 + '" y1="' + toPy(domesticPrice).toFixed(1) + '" x2="' + (W - PAD) + '" y2="' + toPy(domesticPrice).toFixed(1) + '" stroke="#4f9eff" stroke-dasharray="3 3"/>';
+      }
+      inner += '<path d="' + lineD(demandPts) + '" fill="none" stroke="#e94f9e" stroke-width="2.5"/>';
+      inner += '<path d="' + lineD(supplyPts) + '" fill="none" stroke="#2dd4da" stroke-width="2.5"/>';
+      inner += '<circle cx="' + toPx(qd).toFixed(1) + '" cy="' + toPy(domesticPrice).toFixed(1) + '" r="5" fill="#e94f9e" stroke="#080b16" stroke-width="1.5"/>';
+      inner += '<circle cx="' + toPx(qs).toFixed(1) + '" cy="' + toPy(domesticPrice).toFixed(1) + '" r="5" fill="#2dd4da" stroke="#080b16" stroke-width="1.5"/>';
+      inner += '<text x="' + (W - PAD - 4) + '" y="' + (PAD + 12) + '" fill="#e94f9e" font-size="10" text-anchor="end">Спрос</text>';
+      inner += '<text x="' + (W - PAD - 4) + '" y="' + (PAD + 26) + '" fill="#2dd4da" font-size="10" text-anchor="end">Предложение</text>';
+      chartEl.innerHTML = svg(W, H, inner);
+
+      readoutEl.innerHTML =
+        '<div class="readout__item"><div class="readout__num" style="color:#4f9eff">' + fmt(domesticPrice) + '₽</div><div class="readout__label">внутренняя цена</div></div>' +
+        '<div class="readout__item"><div class="readout__num">' + fmt(imports) + '</div><div class="readout__label">объём импорта</div></div>' +
+        '<div class="readout__item"><div class="readout__num" style="color:#f2b84b">' + fmt(revenue) + '₽</div><div class="readout__label">доход бюджета</div></div>' +
+        '<div class="readout__explain">' + (tariff === 0
+          ? "Без тарифа внутренняя цена равна мировой — импортёры продают " + fmt(imports) + " ед. товара по " + fmt(worldPrice) + "₽."
+          : "Тариф в " + fmt(tariff) + "₽ поднимает внутреннюю цену до " + fmt(domesticPrice) + "₽, сокращает импорт до " + fmt(imports) + " ед. и приносит бюджету " + fmt(revenue) + "₽, но потребители платят больше за единицу товара.") + '</div>';
+    }
+
+    slider.addEventListener("input", draw);
+    draw();
+  };
+
+  // ---- 7.8 Minimum wage / labor market simulator ----
+  WIDGETS["interactive-minwage"] = function (mount) {
+    var W = 420, H = 300, PAD = 40;
+    // Labor demand: W = 100 - 0.5*L  |  Labor supply: W = 10 + 0.5*L
+    var demA = 100, demB = 0.5, supA = 10, supB = 0.5;
+    var eqL = (demA - supA) / (demB + supB);
+    var eqW = demA - demB * eqL;
+    var maxL = 130, maxW = 110;
+
+    mount.innerHTML =
+      '<div class="widget">' +
+      '<div class="widget__title"><span class="dot"></span>Тренажёр: минимальная зарплата</div>' +
+      '<div class="widget__hint">Равновесная зарплата на этом рынке труда — примерно ' + fmt(eqW) + '₽. Установите минимальную зарплату выше или ниже равновесия.</div>' +
+      '<div class="widget__grid">' +
+      '<div>' +
+      '<div class="control"><div class="control__label"><span>Минимальная зарплата</span><b id="mw-val">' + fmt(eqW) + '₽</b></div>' +
+      '<input type="range" id="mw-slider" min="0" max="' + maxW + '" value="' + Math.round(eqW) + '"></div>' +
+      '<div class="readout" id="mw-readout"></div>' +
+      '</div>' +
+      '<div class="chart-box" id="mw-chart"></div>' +
+      '</div></div>';
+
+    var slider = mount.querySelector("#mw-slider");
+    var valEl = mount.querySelector("#mw-val");
+    var chartEl = mount.querySelector("#mw-chart");
+    var readoutEl = mount.querySelector("#mw-readout");
+
+    function draw() {
+      var minW = Number(slider.value);
+      valEl.textContent = fmt(minW) + "₽";
+      var binding = minW > eqW + 0.5;
+
+      var wageUsed = binding ? minW : eqW;
+      var Ld = Math.max(0, (demA - wageUsed) / demB);
+      var Ls = Math.max(0, (wageUsed - supA) / supB);
+      var employed = binding ? Ld : eqL;
+      var unemployed = binding ? Math.max(0, Ls - Ld) : 0;
+
+      var x0 = PAD, y0 = H - PAD;
+      function toPx(l) { return x0 + (l / maxL) * (W - PAD * 2); }
+      function toPy(w) { return y0 - (w / maxW) * (H - PAD * 2); }
+
+      var lDemandEnd = Math.min(maxL, demA / demB);
+      var demandPts = [[0, demA], [lDemandEnd, demA - demB * lDemandEnd]];
+      var lSupplyEnd = Math.min(maxL, (maxW - supA) / supB);
+      var supplyPts = [[0, supA], [lSupplyEnd, supA + supB * lSupplyEnd]];
+      function lineD(pts) { return "M" + pts.map(function (p) { return toPx(p[0]).toFixed(1) + "," + toPy(p[1]).toFixed(1); }).join(" L"); }
+
+      var inner = "";
+      inner += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + (W - PAD) + '" y2="' + y0 + '" stroke="rgba(255,255,255,0.18)"/>';
+      inner += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + PAD + '" stroke="rgba(255,255,255,0.18)"/>';
+      inner += '<text x="' + (W - PAD) + '" y="' + (y0 + 18) + '" fill="#7c839c" font-size="10" text-anchor="end">Труд (L)</text>';
+      inner += '<text x="' + (x0 - 6) + '" y="' + (PAD - 6) + '" fill="#7c839c" font-size="10" text-anchor="start">Зарплата (W)</text>';
+
+      if (binding && unemployed > 0.1) {
+        inner += '<rect x="' + toPx(Ld).toFixed(1) + '" y="' + toPy(minW).toFixed(1) + '" width="' + (toPx(Ls) - toPx(Ld)).toFixed(1) + '" height="2.5" fill="#6fe3ab"/>';
+        inner += '<line x1="' + x0 + '" y1="' + toPy(minW).toFixed(1) + '" x2="' + (W - PAD) + '" y2="' + toPy(minW).toFixed(1) + '" stroke="#6fe3ab" stroke-dasharray="4 4"/>';
+        inner += '<text x="' + (x0 + 4) + '" y="' + (toPy(minW) - 6) + '" fill="#6fe3ab" font-size="9">мин. зарплата</text>';
+      } else {
+        inner += '<line x1="' + toPx(eqL).toFixed(1) + '" y1="' + y0 + '" x2="' + toPx(eqL).toFixed(1) + '" y2="' + toPy(eqW).toFixed(1) + '" stroke="rgba(255,255,255,0.2)" stroke-dasharray="3 3"/>';
+        inner += '<line x1="' + x0 + '" y1="' + toPy(eqW).toFixed(1) + '" x2="' + toPx(eqL).toFixed(1) + '" y2="' + toPy(eqW).toFixed(1) + '" stroke="rgba(255,255,255,0.2)" stroke-dasharray="3 3"/>';
+      }
+      inner += '<path d="' + lineD(demandPts) + '" fill="none" stroke="#e94f9e" stroke-width="2.5"/>';
+      inner += '<path d="' + lineD(supplyPts) + '" fill="none" stroke="#2dd4da" stroke-width="2.5"/>';
+      inner += '<circle cx="' + toPx(employed).toFixed(1) + '" cy="' + toPy(wageUsed).toFixed(1) + '" r="5" fill="#f2b84b" stroke="#080b16" stroke-width="1.5"/>';
+      inner += '<text x="' + (W - PAD - 4) + '" y="' + (PAD + 12) + '" fill="#e94f9e" font-size="10" text-anchor="end">Спрос на труд</text>';
+      inner += '<text x="' + (W - PAD - 4) + '" y="' + (PAD + 26) + '" fill="#2dd4da" font-size="10" text-anchor="end">Предложение труда</text>';
+      chartEl.innerHTML = svg(W, H, inner);
+
+      readoutEl.innerHTML =
+        '<div class="readout__item"><div class="readout__num" style="color:#f2b84b">' + fmt(employed) + '</div><div class="readout__label">занято</div></div>' +
+        '<div class="readout__item"><div class="readout__num" style="color:#6fe3ab">' + fmt(unemployed) + '</div><div class="readout__label">не нашли работу</div></div>' +
+        '<div class="readout__explain">' + (binding
+          ? "Минимальная зарплата " + fmt(minW) + "₽ выше равновесной (" + fmt(eqW) + "₽): работодатели готовы нанять только " + fmt(Ld) + " человек, а работать хотят " + fmt(Ls) + " — образуется избыток предложения труда, то есть безработица."
+          : "Минимальная зарплата не выше равновесной, поэтому она не ограничивает рынок — занятость и зарплата остаются на равновесном уровне.") + '</div>';
+    }
+
+    slider.addEventListener("input", draw);
+    draw();
+  };
+
+  // ---------------------------------------------------------------
+  // 7.9 Profile view
+  // ---------------------------------------------------------------
+
+  function apiRequest(method, path, payload) {
+    return fetch(API_BASE + path, {
+      method: method,
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.token },
+      body: JSON.stringify(payload || {})
+    }).then(function (res) {
+      return res.json().catch(function () { return null; }).then(function (data) {
+        if (!res.ok) {
+          var err = new Error((data && data.message) || "Что-то пошло не так. Попробуйте ещё раз.");
+          err.data = data;
+          throw err;
+        }
+        return data;
+      });
+    });
+  }
+
+  function quizAverage() {
+    var scores = progress.quizScores || {};
+    var ids = Object.keys(scores);
+    if (!ids.length) return null;
+    var correct = 0, total = 0;
+    ids.forEach(function (id) { correct += scores[id].correct; total += scores[id].total; });
+    return total ? Math.round((correct / total) * 100) : null;
+  }
+
+  function coursesFullyDone() {
+    return COURSES.filter(function (c) { return courseCompletedCount(c) === c.lessons.length; }).length;
+  }
+
+  function ACHIEVEMENTS() {
+    var done = completedCount();
+    var avg = quizAverage();
+    var started = COURSES.filter(function (c) { return courseCompletedCount(c) > 0; }).length;
+    return [
+      { title: "Первый шаг", desc: "Пройдите свой первый урок", unlocked: done >= 1, icon: ICONS.check },
+      { title: "Разгон", desc: "Пройдите 5 уроков", unlocked: done >= 5, icon: ICONS.flame },
+      { title: "Во все стороны", desc: "Начните все курсы платформы", unlocked: started === COURSES.length, icon: ICONS.book },
+      { title: "Курс закрыт", desc: "Пройдите один курс полностью", unlocked: coursesFullyDone() >= 1, icon: ICONS.trophy },
+      { title: "Отличник", desc: "Средний результат квизов от 90%", unlocked: avg !== null && avg >= 90, icon: ICONS.star },
+      { title: "Мастер экономики", desc: "Пройдите все уроки платформы", unlocked: done === totalLessons(), icon: ICONS.trophy }
+    ];
+  }
+
+  var profileActiveTab = "overview";
+
+  function renderProfile() {
+    progress.lastVisited = progress.lastVisited; // no-op, keep last lesson intact
+    saveProgress();
+
+    var done = completedCount();
+    var total = totalLessons();
+    var pct = total ? Math.round((done / total) * 100) : 0;
+    var avg = quizAverage();
+    var streak = done > 0 ? Math.min(done, 30) : 0;
+
+    var html = "";
+    html += '<div class="profile-header">';
+    html += '<div class="profile-avatar">' + escapeHtml((user.name || "У").trim().charAt(0).toUpperCase()) + '</div>';
+    html += '<div><div class="profile-header__name">' + escapeHtml(user.name || "Ученик") + '</div><div class="profile-header__email">' + escapeHtml(user.email || "") + '</div></div>';
+    html += '</div>';
+
+    html += '<div class="profile-tabs">';
+    html += '<button class="profile-tab' + (profileActiveTab === "overview" ? " is-active" : "") + '" data-ptab="overview">' + ICONS.chart + ' Прогресс</button>';
+    html += '<button class="profile-tab' + (profileActiveTab === "achievements" ? " is-active" : "") + '" data-ptab="achievements">' + ICONS.trophy + ' Достижения</button>';
+    html += '<button class="profile-tab' + (profileActiveTab === "settings" ? " is-active" : "") + '" data-ptab="settings">' + ICONS.gear + ' Настройки</button>';
+    html += '</div>';
+
+    // ---- Overview panel ----
+    html += '<div class="profile-panel' + (profileActiveTab === "overview" ? " is-active" : "") + '" data-ppanel="overview">';
+    html += '<div class="stat-grid">';
+    html += '<div class="stat-tile"><div class="stat-tile__icon">' + ICONS.book + '</div><div class="stat-tile__num">' + done + '/' + total + '</div><div class="stat-tile__label">уроков пройдено</div></div>';
+    html += '<div class="stat-tile"><div class="stat-tile__icon">' + ICONS.chart + '</div><div class="stat-tile__num">' + pct + '%</div><div class="stat-tile__label">общий прогресс</div></div>';
+    html += '<div class="stat-tile"><div class="stat-tile__icon">' + ICONS.star + '</div><div class="stat-tile__num">' + (progress.stars || 0) + '</div><div class="stat-tile__label">звёзд за квизы</div></div>';
+    html += '<div class="stat-tile"><div class="stat-tile__icon">' + ICONS.flame + '</div><div class="stat-tile__num">' + streak + '</div><div class="stat-tile__label">серия уроков</div></div>';
+    html += '</div>';
+
+    html += '<div class="section-title">Прогресс по курсам</div>';
+    html += '<div class="settings-card">';
+    COURSES.forEach(function (course) {
+      var doneC = courseCompletedCount(course);
+      var pctC = Math.round((doneC / course.lessons.length) * 100);
+      html += '<div class="profile-course-row">';
+      html += '<div class="profile-course-row__icon theme-' + course.theme + '">' + course.icon + '</div>';
+      html += '<div class="profile-course-row__body"><div class="profile-course-row__title">' + course.title + '</div>';
+      html += '<div class="mini-progress fill-' + course.theme + '"><i style="width:' + pctC + '%"></i></div></div>';
+      html += '<div class="profile-course-row__pct">' + doneC + '/' + course.lessons.length + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    if (avg !== null) {
+      html += '<div class="settings-card"><div class="settings-card__title">' + ICONS.chart + ' Средний результат квизов</div>';
+      html += '<div class="settings-card__hint">Средняя доля правильных ответов по всем пройденным квизам: <b style="color:var(--ink-0)">' + avg + '%</b></div></div>';
+    }
+    html += '</div>';
+
+    // ---- Achievements panel ----
+    html += '<div class="profile-panel' + (profileActiveTab === "achievements" ? " is-active" : "") + '" data-ppanel="achievements">';
+    html += '<div class="achv-grid">';
+    ACHIEVEMENTS().forEach(function (a) {
+      html += '<div class="achv-badge' + (a.unlocked ? " is-unlocked" : "") + '">';
+      html += '<div class="achv-badge__icon">' + a.icon + '</div>';
+      html += '<div class="achv-badge__title">' + a.title + '</div>';
+      html += '<div class="achv-badge__desc">' + a.desc + '</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+
+    // ---- Settings panel ----
+    html += '<div class="profile-panel' + (profileActiveTab === "settings" ? " is-active" : "") + '" data-ppanel="settings">';
+
+    html += '<div class="settings-card">';
+    html += '<div class="settings-card__title">' + ICONS.profile + ' Данные профиля</div>';
+    html += '<div class="settings-card__hint">Изменения имени сохраняются сразу в этом браузере и синхронизируются с сервером, если он доступен.</div>';
+    html += '<div class="text-field"><label for="pf-name">Имя</label><input type="text" id="pf-name" value="' + escapeHtml(user.name || "") + '"></div>';
+    html += '<div class="text-field"><label for="pf-email">Email</label><input type="text" id="pf-email" value="' + escapeHtml(user.email || "") + '" disabled></div>';
+    html += '<div class="settings-row"><button class="btn btn-grad" id="pf-save-name">Сохранить имя</button></div>';
+    html += '<p class="form-msg" id="pf-name-msg"></p>';
+    html += '</div>';
+
+    html += '<div class="settings-card">';
+    html += '<div class="settings-card__title">' + ICONS.lock + ' Смена пароля</div>';
+    html += '<div class="settings-card__hint">Введите текущий пароль и новый пароль (минимум 8 символов).</div>';
+    html += '<div class="text-field"><label for="pf-cur-pass">Текущий пароль</label><input type="password" id="pf-cur-pass" autocomplete="current-password"></div>';
+    html += '<div class="text-field"><label for="pf-new-pass">Новый пароль</label><input type="password" id="pf-new-pass" autocomplete="new-password" minlength="8"></div>';
+    html += '<div class="text-field"><label for="pf-new-pass2">Повторите новый пароль</label><input type="password" id="pf-new-pass2" autocomplete="new-password" minlength="8"></div>';
+    html += '<div class="settings-row"><button class="btn btn-grad" id="pf-save-pass">Обновить пароль</button></div>';
+    html += '<p class="form-msg" id="pf-pass-msg"></p>';
+    html += '</div>';
+
+    html += '<div class="settings-card danger-zone">';
+    html += '<div class="settings-card__title">' + ICONS.trash + ' Сбросить прогресс</div>';
+    html += '<div class="settings-card__hint">Обнулит пройденные уроки, звёзды и результаты квизов на этом устройстве. Это действие необратимо.</div>';
+    html += '<div class="settings-row"><button class="btn btn-danger" id="pf-reset-progress">Сбросить весь прогресс</button></div>';
+    html += '<p class="form-msg" id="pf-reset-msg"></p>';
+    html += '</div>';
+
+    html += '</div>';
+
+    root.innerHTML = html;
+
+    root.querySelectorAll("[data-ptab]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        profileActiveTab = btn.getAttribute("data-ptab");
+        renderProfile();
+      });
+    });
+
+    var nameInput = root.querySelector("#pf-name");
+    var nameMsg = root.querySelector("#pf-name-msg");
+    var saveNameBtn = root.querySelector("#pf-save-name");
+    if (saveNameBtn) {
+      saveNameBtn.addEventListener("click", function () {
+        var newName = nameInput.value.trim();
+        if (newName.length < 2) {
+          nameMsg.textContent = "Имя должно быть не короче 2 символов";
+          nameMsg.className = "form-msg is-error";
+          return;
+        }
+        user.name = newName;
+        session.user = user;
+        try { localStorage.setItem(AUTH_KEY, JSON.stringify(session)); } catch (e) { /* ignore */ }
+        refreshUserChrome();
+        nameMsg.textContent = "Имя обновлено";
+        nameMsg.className = "form-msg is-success";
+
+        apiRequest("PUT", "/auth/profile", { name: newName }).catch(function () {
+          nameMsg.textContent = "Имя обновлено локально. Сервер сейчас недоступен, синхронизация произойдёт позже.";
+          nameMsg.className = "form-msg is-success";
+        });
+      });
+    }
+
+    var curPass = root.querySelector("#pf-cur-pass");
+    var newPass = root.querySelector("#pf-new-pass");
+    var newPass2 = root.querySelector("#pf-new-pass2");
+    var passMsg = root.querySelector("#pf-pass-msg");
+    var savePassBtn = root.querySelector("#pf-save-pass");
+    if (savePassBtn) {
+      savePassBtn.addEventListener("click", function () {
+        passMsg.className = "form-msg";
+        if (!curPass.value) {
+          passMsg.textContent = "Введите текущий пароль";
+          passMsg.className = "form-msg is-error";
+          return;
+        }
+        if (newPass.value.length < 8) {
+          passMsg.textContent = "Новый пароль должен быть не короче 8 символов";
+          passMsg.className = "form-msg is-error";
+          return;
+        }
+        if (newPass.value !== newPass2.value) {
+          passMsg.textContent = "Пароли не совпадают";
+          passMsg.className = "form-msg is-error";
+          return;
+        }
+        savePassBtn.disabled = true;
+        passMsg.textContent = "Сохраняем…";
+        apiRequest("PUT", "/auth/password", { currentPassword: curPass.value, newPassword: newPass.value })
+          .then(function () {
+            passMsg.textContent = "Пароль успешно обновлён";
+            passMsg.className = "form-msg is-success";
+            curPass.value = ""; newPass.value = ""; newPass2.value = "";
+          })
+          .catch(function (err) {
+            passMsg.textContent = err.message || "Не удалось связаться с сервером, попробуйте позже";
+            passMsg.className = "form-msg is-error";
+          })
+          .finally(function () { savePassBtn.disabled = false; });
+      });
+    }
+
+    var resetBtn = root.querySelector("#pf-reset-progress");
+    var resetMsg = root.querySelector("#pf-reset-msg");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function () {
+        if (!window.confirm("Точно сбросить весь прогресс на этом устройстве? Это необратимо.")) return;
+        progress = { completed: {}, quizScores: {}, lastVisited: null, stars: 0 };
+        saveProgress();
+        resetMsg.textContent = "Прогресс сброшен";
+        resetMsg.className = "form-msg is-success";
+        updateStreak();
+        renderProfile();
+      });
+    }
+  }
+
   // ---------------------------------------------------------------
   // 8. Router
   // ---------------------------------------------------------------
@@ -1341,6 +1981,9 @@
     if (state.view === "lesson") {
       renderSidebar(state.lessonId);
       renderLesson(state.lessonId);
+    } else if (state.view === "profile") {
+      renderSidebar(null, true);
+      renderProfile();
     } else {
       renderSidebar(null);
       renderOverview();
