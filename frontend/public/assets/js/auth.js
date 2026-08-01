@@ -2,6 +2,28 @@
   "use strict";
 
   var API_BASE = window.__API_BASE__ || "http://localhost:4000/api";
+  var AUTH_KEY = "index_econ_auth";
+
+  function saveSession(data) {
+    try {
+      localStorage.setItem(AUTH_KEY, JSON.stringify({
+        token: data.token,
+        user: data.user,
+        savedAt: Date.now()
+      }));
+    } catch (e) { /* localStorage unavailable */ }
+  }
+
+  var alreadyLoggedIn = false;
+  try {
+    var rawSession = localStorage.getItem(AUTH_KEY);
+    if (rawSession && JSON.parse(rawSession).token) alreadyLoggedIn = true;
+  } catch (e) { /* ignore */ }
+
+  if (alreadyLoggedIn) {
+    window.location.replace("dashboard.html");
+    return;
+  }
 
   var tabsWrap = document.querySelector(".tabs");
   var tabLogin = document.getElementById("tab-login");
@@ -143,12 +165,10 @@
     setFormMessage("login", "");
 
     try {
-      await postJSON("/auth/login", { email: email.value, password: password.value });
+      var data = await postJSON("/auth/login", { email: email.value, password: password.value });
+      saveSession(data);
       setFormMessage("login", "Готово! Перенаправляем в кабинет…", "is-success");
-
-      setTimeout(function () {
-        window.location.href = "dashboard.html";
-      }, 1000);
+      setTimeout(function () { window.location.href = "dashboard.html"; }, 500);
     } catch (err) {
       setFormMessage("login", err.message, "is-error");
     } finally {
@@ -180,13 +200,14 @@
     setFormMessage("register", "");
 
     try {
-      await postJSON("/auth/register", {
+      var data = await postJSON("/auth/register", {
         name: name.value.trim(),
         email: email.value,
         password: password.value
       });
-      setFormMessage("register", "Аккаунт создан! Теперь войдите.", "is-success");
-      setTimeout(function () { activate("login"); }, 1200);
+      saveSession(data);
+      setFormMessage("register", "Аккаунт создан! Перенаправляем в кабинет…", "is-success");
+      setTimeout(function () { window.location.href = "dashboard.html"; }, 700);
     } catch (err) {
       setFormMessage("register", err.message, "is-error");
     } finally {
