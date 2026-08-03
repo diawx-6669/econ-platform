@@ -199,6 +199,44 @@ html, body { overflow-x: hidden; }
   margin: 20px 12px 8px;
 }
 
+.tools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 2px 0 10px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tool-link {
+  display: flex; align-items: center; gap: 9px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: none; border: none;
+  color: var(--ink-2);
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+  line-height: 1.35;
+}
+
+.tool-link:hover { color: var(--ink-0); background: rgba(255,255,255,0.04); }
+.tool-link.is-active { color: var(--gold); background: rgba(242,184,75,0.08); }
+
+.tool-link__icon { width: 15px; height: 15px; flex: none; display: flex; }
+.tool-link__icon svg { width: 15px; height: 15px; }
+
+.link-tools-all {
+  background: none; border: none;
+  color: var(--ink-2);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.link-tools-all:hover { color: var(--teal); }
+
 .course-group { margin-bottom: 4px; }
 
 .course-group__head {

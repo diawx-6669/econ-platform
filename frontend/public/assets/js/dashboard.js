@@ -28,7 +28,7 @@
       var p = JSON.parse(localStorage.getItem(progressKey));
       if (p && typeof p === "object") return p;
     } catch (e) { /* ignore */ }
-    return { completed: {}, quizScores: {}, lastVisited: null, stars: 0 };
+    return { completed: {}, quizScores: {}, lastVisited: null, stars: 0, toolsViewed: {} };
   }
 
   function saveProgress() {
@@ -67,7 +67,13 @@
     chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
     book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
-    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>'
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>',
+    gdp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>',
+    loan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 21v-6h4v6"/></svg>',
+    taxicon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>',
+    monopoly: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 8l-3 5a3.5 3.5 0 0 0 7 0z"/><path d="M19 8l-3 5a3.5 3.5 0 0 0 7 0z"/><path d="M5 8h14"/><path d="M8 21h8"/></svg>',
+    multiplier: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+    exchange: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v14"/><path d="M3 13l4 4 4-4"/><path d="M17 21V7"/><path d="M21 11l-4-4-4 4"/></svg>'
   };
 
   var COURSES = [
@@ -650,6 +656,60 @@
     });
   });
 
+  var TOOLS = [
+    {
+      id: "tool-gdp",
+      theme: "violet",
+      icon: ICONS.gdp,
+      title: "Компоненты ВВП",
+      desc: "Соберите ВВП страны из потребления, инвестиций, госрасходов и чистого экспорта и посмотрите вклад каждой составляющей.",
+      kind: "interactive-gdp"
+    },
+    {
+      id: "tool-loan",
+      theme: "blue",
+      icon: ICONS.loan,
+      title: "Кредитный калькулятор",
+      desc: "Рассчитайте ежемесячный платёж и переплату по кредиту, посмотрите, как убывает остаток долга по годам.",
+      kind: "interactive-loan"
+    },
+    {
+      id: "tool-tax",
+      theme: "gold",
+      icon: ICONS.taxicon,
+      title: "Прогрессивный налог",
+      desc: "Узнайте разницу между предельной и эффективной налоговой ставкой на разных уровнях дохода.",
+      kind: "interactive-tax"
+    },
+    {
+      id: "tool-monopoly",
+      theme: "pink",
+      icon: ICONS.monopoly,
+      title: "Монополия и конкуренция",
+      desc: "Двигайте рыночную власть продавца и смотрите, как растёт цена и возникают потери общества.",
+      kind: "interactive-monopoly"
+    },
+    {
+      id: "tool-multiplier",
+      theme: "teal",
+      icon: ICONS.multiplier,
+      title: "Фискальный мультипликатор",
+      desc: "Один рубль государственных расходов проходит по экономике несколько раз — посчитайте итоговый эффект.",
+      kind: "interactive-multiplier"
+    },
+    {
+      id: "tool-exchange",
+      theme: "green",
+      icon: ICONS.exchange,
+      title: "Валюты и паритет",
+      desc: "Переводите суммы по обменному курсу и сравнивайте покупательную способность разных валют.",
+      kind: "interactive-exchange"
+    }
+  ];
+  var TOOL_INDEX = {};
+  TOOLS.forEach(function (t) { TOOL_INDEX[t.id] = t; });
+  if (!progress.toolsViewed) progress.toolsViewed = {};
+
   function totalLessons() { return Object.keys(LESSON_INDEX).length; }
   function completedCount() { return Object.keys(progress.completed).length; }
   function courseCompletedCount(course) {
@@ -713,14 +773,25 @@
   // 3. Sidebar navigation
   // ---------------------------------------------------------------
 
-  function renderSidebar(activeLessonId, isProfile) {
+  function renderSidebar(activeLessonId, isProfile, activeToolId, isToolsOverview) {
     var html = "";
-    html += '<button class="sidebar__nav-item' + (!activeLessonId && !isProfile ? " is-active" : "") + '" data-go-overview>' +
+    html += '<button class="sidebar__nav-item' + (!activeLessonId && !isProfile && !activeToolId && !isToolsOverview ? " is-active" : "") + '" data-go-overview>' +
       '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>' +
       'Обзор</button>';
     html += '<button class="sidebar__nav-item' + (isProfile ? " is-active" : "") + '" data-go-profile>' +
       '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.6-4 5-6 8-6s6.4 2 8 6"/></svg>' +
       'Профиль</button>';
+    html += '<button class="sidebar__nav-item' + (activeToolId || isToolsOverview ? " is-active" : "") + '" data-go-tools>' +
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.6 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1z"/></svg>' +
+      'Инструменты</button>';
+    html += '<div class="tools-list">';
+    TOOLS.forEach(function (tool) {
+      var isActive = tool.id === activeToolId;
+      html += '<button class="tool-link' + (isActive ? " is-active" : "") + '" data-go-tool="' + tool.id + '">';
+      html += '<span class="tool-link__icon">' + tool.icon + '</span><span>' + tool.title + '</span>';
+      html += '</button>';
+    });
+    html += '</div>';
     html += '<div class="sidebar__label">Курсы</div>';
 
     COURSES.forEach(function (course) {
@@ -755,6 +826,16 @@
     sidebarNav.querySelector("[data-go-profile]").addEventListener("click", function () {
       closeSidebar();
       navigate({ view: "profile" });
+    });
+    sidebarNav.querySelector("[data-go-tools]").addEventListener("click", function () {
+      closeSidebar();
+      navigate({ view: "tools" });
+    });
+    sidebarNav.querySelectorAll("[data-go-tool]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        closeSidebar();
+        navigate({ view: "tool", toolId: btn.getAttribute("data-go-tool") });
+      });
     });
     sidebarNav.querySelectorAll("[data-toggle-course]").forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -812,6 +893,18 @@
     });
     html += '</div>';
 
+    html += '<div class="section-title">Инструменты<button class="link-tools-all" data-go-tools-all>Все инструменты →</button></div>';
+    html += '<div class="course-grid">';
+    TOOLS.slice(0, 4).forEach(function (tool) {
+      html += '<button class="course-card" data-open-tool="' + tool.id + '">';
+      html += '<div class="course-card__icon theme-' + tool.theme + '">' + tool.icon + '</div>';
+      html += '<div class="course-card__title">' + tool.title + '</div>';
+      html += '<p class="course-card__desc">' + tool.desc + '</p>';
+      html += '<div class="course-card__meta"><span>' + (progress.toolsViewed[tool.id] ? "Уже пробовали" : "Ещё не открыт") + '</span></div>';
+      html += '</button>';
+    });
+    html += '</div>';
+
     root.innerHTML = html;
 
     var cont = root.querySelector("[data-continue]");
@@ -820,6 +913,78 @@
     root.querySelectorAll("[data-open-course]").forEach(function (btn) {
       btn.addEventListener("click", function () { navigate({ view: "lesson", lessonId: btn.getAttribute("data-open-course") }); });
     });
+    root.querySelectorAll("[data-open-tool]").forEach(function (btn) {
+      btn.addEventListener("click", function () { navigate({ view: "tool", toolId: btn.getAttribute("data-open-tool") }); });
+    });
+    var goToolsAll = root.querySelector("[data-go-tools-all]");
+    if (goToolsAll) goToolsAll.addEventListener("click", function () { navigate({ view: "tools" }); });
+  }
+
+  // ---------------------------------------------------------------
+  // 4.5 Tools (standalone interactive sandbox, outside course lessons)
+  // ---------------------------------------------------------------
+
+  function renderToolsOverview() {
+    var seen = Object.keys(progress.toolsViewed).length;
+    var html = "";
+    html += '<div class="hero-card">';
+    html += '<h1>Инструменты</h1>';
+    html += '<p>Небольшие практические симуляторы и калькуляторы — без теории и квизов, просто меняйте параметры и смотрите, как меняется результат.</p>';
+    html += '<div class="hero-stats">';
+    html += '<div><div class="hero-stat__num">' + seen + ' / ' + TOOLS.length + '</div><div class="hero-stat__label">инструментов испробовано</div></div>';
+    html += '</div></div>';
+
+    html += '<div class="section-title">Все инструменты</div>';
+    html += '<div class="course-grid">';
+    TOOLS.forEach(function (tool) {
+      html += '<button class="course-card" data-open-tool="' + tool.id + '">';
+      html += '<div class="course-card__icon theme-' + tool.theme + '">' + tool.icon + '</div>';
+      html += '<div class="course-card__title">' + tool.title + '</div>';
+      html += '<p class="course-card__desc">' + tool.desc + '</p>';
+      html += '<div class="course-card__meta"><span>' + (progress.toolsViewed[tool.id] ? "Уже пробовали" : "Ещё не открыт") + '</span></div>';
+      html += '</button>';
+    });
+    html += '</div>';
+
+    root.innerHTML = html;
+    root.querySelectorAll("[data-open-tool]").forEach(function (btn) {
+      btn.addEventListener("click", function () { navigate({ view: "tool", toolId: btn.getAttribute("data-open-tool") }); });
+    });
+  }
+
+  function renderTool(toolId) {
+    var tool = TOOL_INDEX[toolId];
+    if (!tool) { navigate({ view: "tools" }); return; }
+
+    progress.toolsViewed[toolId] = true;
+    saveProgress();
+
+    var html = "";
+    html += '<div class="breadcrumb"><button data-go-tools-crumb>Инструменты</button> / ' + escapeHtml(tool.title) + '</div>';
+    html += '<div class="lesson-header"><div>';
+    html += '<span class="lesson-header__type">Инструмент</span>';
+    html += '<h1>' + escapeHtml(tool.title) + '</h1>';
+    html += '</div></div>';
+    html += '<div class="lesson-block"><p>' + tool.desc + '</p></div>';
+    html += '<div id="widget-mount"></div>';
+
+    var idx = TOOLS.indexOf(tool);
+    var nextTool = TOOLS[idx + 1];
+    html += '<div class="lesson-nav"><button class="btn btn-ghost" data-go-tools-2">← Ко всем инструментам</button>';
+    if (nextTool) html += '<button class="btn btn-ghost" data-next-tool="' + nextTool.id + '">Следующий инструмент →</button>';
+    html += '</div>';
+
+    root.innerHTML = html;
+
+    root.querySelectorAll("[data-go-tools-crumb], [data-go-tools-2]").forEach(function (el) {
+      el.addEventListener("click", function () { navigate({ view: "tools" }); });
+    });
+    var nextBtn = root.querySelector("[data-next-tool]");
+    if (nextBtn) nextBtn.addEventListener("click", function () { navigate({ view: "tool", toolId: nextBtn.getAttribute("data-next-tool") }); });
+
+    var widgetMount = document.getElementById("widget-mount");
+    var widgetFn = WIDGETS[tool.kind];
+    if (widgetFn) widgetFn(widgetMount);
   }
 
   // ---------------------------------------------------------------
@@ -1734,6 +1899,413 @@
     draw();
   };
 
+  // ---- 7.9 GDP composition (expenditure approach) ----
+  WIDGETS["interactive-gdp"] = function (mount) {
+    mount.innerHTML =
+      '<div class="widget">' +
+      '<div class="widget__title"><span class="dot"></span>Тренажёр: ВВП по расходам</div>' +
+      '<div class="widget__hint">ВВП = C + I + G + NX. Двигайте ползунки компонентов (в трлн ₽) и смотрите, как они складываются в общий объём и меняют структуру экономики.</div>' +
+      '<div class="widget__grid">' +
+      '<div>' +
+      '<div class="control"><div class="control__label"><span>Потребление (C)</span><b id="gdp-c-val">60</b></div><input type="range" id="gdp-c" min="0" max="120" value="60"></div>' +
+      '<div class="control"><div class="control__label"><span>Инвестиции (I)</span><b id="gdp-i-val">20</b></div><input type="range" id="gdp-i" min="0" max="80" value="20"></div>' +
+      '<div class="control"><div class="control__label"><span>Госрасходы (G)</span><b id="gdp-g-val">18</b></div><input type="range" id="gdp-g" min="0" max="80" value="18"></div>' +
+      '<div class="control"><div class="control__label"><span>Чистый экспорт (NX)</span><b id="gdp-nx-val">-2</b></div><input type="range" id="gdp-nx" min="-30" max="30" value="-2"></div>' +
+      '</div>' +
+      '<div class="chart-box" id="gdp-chart"></div>' +
+      '</div>' +
+      '<div class="readout" id="gdp-readout"></div>' +
+      '</div>';
+
+    var cS = mount.querySelector("#gdp-c"), iS = mount.querySelector("#gdp-i"), gS = mount.querySelector("#gdp-g"), nxS = mount.querySelector("#gdp-nx");
+    var chartEl = mount.querySelector("#gdp-chart");
+    var readoutEl = mount.querySelector("#gdp-readout");
+
+    function draw() {
+      var c = Number(cS.value), i = Number(iS.value), g = Number(gS.value), nx = Number(nxS.value);
+      mount.querySelector("#gdp-c-val").textContent = c;
+      mount.querySelector("#gdp-i-val").textContent = i;
+      mount.querySelector("#gdp-g-val").textContent = g;
+      mount.querySelector("#gdp-nx-val").textContent = (nx > 0 ? "+" : "") + nx;
+
+      var gdp = c + i + g + nx;
+      var parts = [
+        { label: "Потребление", v: c, color: "#7c5cff" },
+        { label: "Инвестиции", v: i, color: "#2dd4da" },
+        { label: "Госрасходы", v: g, color: "#f2b84b" },
+        { label: "Чистый экспорт", v: nx, color: "#e94f9e" }
+      ];
+
+      var W = 300, H = 220;
+      var barX = 60, barW = 90, y0 = H - 30, maxAbs = Math.max(gdp, c + i + g, 1) * 1.15;
+      function toH(v) { return (Math.abs(v) / maxAbs) * (H - 60); }
+      var inner = "";
+      inner += '<line x1="20" y1="' + y0 + '" x2="' + (W - 20) + '" y2="' + y0 + '" stroke="rgba(255,255,255,0.18)"/>';
+      var cursorY = y0;
+      parts.forEach(function (p) {
+        var h = toH(p.v);
+        var rectY = p.v >= 0 ? cursorY - h : cursorY;
+        inner += '<rect x="' + barX + '" y="' + rectY.toFixed(1) + '" width="' + barW + '" height="' + Math.max(h, 0.5).toFixed(1) + '" fill="' + p.color + '" rx="3"/>';
+        if (p.v >= 0) cursorY -= h; else cursorY += h;
+      });
+      inner += '<text x="' + (barX + barW / 2) + '" y="' + (y0 + 18) + '" fill="#7c839c" font-size="10" text-anchor="middle">структура ВВП</text>';
+      inner += '<text x="' + (barX + barW + 30) + '" y="' + (cursorY - 6) + '" fill="#f5f6fb" font-size="14" font-weight="700" font-family="Space Grotesk, sans-serif">' + fmt(gdp) + ' трлн ₽</text>';
+      inner += '<text x="' + (barX + barW + 30) + '" y="' + (cursorY + 12) + '" fill="#7c839c" font-size="10">итоговый ВВП</text>';
+      chartEl.innerHTML = svg(W, H, inner);
+
+      readoutEl.innerHTML = parts.map(function (p) {
+        var share = gdp !== 0 ? (p.v / gdp) * 100 : 0;
+        return '<div class="readout__item"><div class="readout__num" style="color:' + p.color + '">' + fmt(share, 0) + '%</div><div class="readout__label">' + p.label + ' (' + fmt(p.v) + ')</div></div>';
+      }).join("") +
+        '<div class="readout__explain">' + (nx < 0
+          ? "Отрицательный чистый экспорт означает, что страна ввозит больше товаров, чем вывозит — импорт вычитается из ВВП, так как он не был произведён внутри страны."
+          : "Положительный чистый экспорт увеличивает ВВП: страна продаёт за рубеж больше, чем покупает.") + '</div>';
+    }
+
+    [cS, iS, gS, nxS].forEach(function (el) { el.addEventListener("input", draw); });
+    draw();
+  };
+
+  // ---- 7.10 Loan / amortization calculator ----
+  WIDGETS["interactive-loan"] = function (mount) {
+    mount.innerHTML =
+      '<div class="widget">' +
+      '<div class="widget__title"><span class="dot"></span>Кредитный калькулятор</div>' +
+      '<div class="widget__hint">Сумма кредита, ставка и срок — калькулятор считает ежемесячный платёж (аннуитет) и рисует, как остаток долга снижается по годам.</div>' +
+      '<div class="widget__grid">' +
+      '<div>' +
+      '<div class="control"><div class="control__label"><span>Сумма кредита, ₽</span></div><input type="number" class="num-input" id="ln-amount" value="3000000"></div>' +
+      '<div class="control"><div class="control__label"><span>Ставка в год</span><b id="ln-rate-val">14%</b></div><input type="range" id="ln-rate" min="1" max="30" value="14"></div>' +
+      '<div class="control"><div class="control__label"><span>Срок</span><b id="ln-years-val">15 лет</b></div><input type="range" id="ln-years" min="1" max="30" value="15"></div>' +
+      '</div>' +
+      '<div class="chart-box" id="ln-chart"></div>' +
+      '</div>' +
+      '<div class="readout" id="ln-readout"></div>' +
+      '</div>';
+
+    var amountInput = mount.querySelector("#ln-amount");
+    var rateSlider = mount.querySelector("#ln-rate");
+    var yearsSlider = mount.querySelector("#ln-years");
+    var chartEl = mount.querySelector("#ln-chart");
+    var readoutEl = mount.querySelector("#ln-readout");
+
+    function draw() {
+      var amount = Number(amountInput.value) || 0;
+      var annualRate = Number(rateSlider.value) / 100;
+      var years = Number(yearsSlider.value);
+      mount.querySelector("#ln-rate-val").textContent = (annualRate * 100).toFixed(0) + "%";
+      mount.querySelector("#ln-years-val").textContent = years + (years === 1 ? " год" : years < 5 ? " года" : " лет");
+
+      var n = years * 12;
+      var r = annualRate / 12;
+      var payment = r > 0 ? (amount * r) / (1 - Math.pow(1 + r, -n)) : amount / n;
+      var balance = amount;
+      var yearlyBalances = [balance];
+      for (var y = 1; y <= years; y++) {
+        for (var m = 0; m < 12; m++) {
+          var interestPart = balance * r;
+          balance = balance - (payment - interestPart);
+        }
+        yearlyBalances.push(Math.max(0, balance));
+      }
+      var totalPaid = payment * n;
+      var totalInterest = totalPaid - amount;
+
+      var W = 380, H = 220, PAD = 34;
+      var maxV = amount * 1.05 || 10;
+      var x0 = PAD, y0 = H - PAD;
+      function toPx(i) { return x0 + (i / Math.max(1, years)) * (W - PAD * 2); }
+      function toPy(v) { return y0 - (v / maxV) * (H - PAD * 2); }
+
+      var lineD = "M" + yearlyBalances.map(function (v, i) { return toPx(i).toFixed(1) + "," + toPy(v).toFixed(1); }).join(" L");
+      var areaD = lineD + " L" + toPx(yearlyBalances.length - 1).toFixed(1) + "," + y0 + " L" + toPx(0).toFixed(1) + "," + y0 + " Z";
+
+      var inner = "";
+      inner += '<path d="' + areaD + '" fill="rgba(79,158,255,0.14)"/>';
+      inner += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + (W - PAD) + '" y2="' + y0 + '" stroke="rgba(255,255,255,0.18)"/>';
+      inner += '<path d="' + lineD + '" fill="none" stroke="#4f9eff" stroke-width="2.5"/>';
+      inner += '<circle cx="' + toPx(0).toFixed(1) + '" cy="' + toPy(amount).toFixed(1) + '" r="4.5" fill="#4f9eff" stroke="#080b16" stroke-width="1.5"/>';
+      inner += '<text x="' + x0 + '" y="' + (y0 + 18) + '" fill="#7c839c" font-size="10">сегодня</text>';
+      inner += '<text x="' + (W - PAD) + '" y="' + (y0 + 18) + '" fill="#7c839c" font-size="10" text-anchor="end">погашение</text>';
+      chartEl.innerHTML = svg(W, H, inner);
+
+      readoutEl.innerHTML =
+        '<div class="readout__item"><div class="readout__num" style="color:#4f9eff">' + fmt(payment) + '₽</div><div class="readout__label">платёж в месяц</div></div>' +
+        '<div class="readout__item"><div class="readout__num">' + fmt(totalPaid) + '₽</div><div class="readout__label">выплачено всего</div></div>' +
+        '<div class="readout__item"><div class="readout__num" style="color:#e94f9e">' + fmt(totalInterest) + '₽</div><div class="readout__label">переплата по процентам</div></div>' +
+        '<div class="readout__explain">Взяв ' + fmt(amount) + '₽ под ' + (annualRate * 100).toFixed(0) + '% на ' + years + ' лет, вы заплатите банку ' + fmt(totalPaid) + '₽, из которых ' + fmt(totalInterest) + '₽ — это переплата за пользование деньгами банка.</div>';
+    }
+
+    [amountInput, rateSlider, yearsSlider].forEach(function (el) { el.addEventListener("input", draw); });
+    draw();
+  };
+
+  // ---- 7.11 Progressive tax brackets ----
+  WIDGETS["interactive-tax"] = function (mount) {
+    var BRACKETS = [
+      { upTo: 500000, rate: 0.10 },
+      { upTo: 1500000, rate: 0.20 },
+      { upTo: 4000000, rate: 0.30 },
+      { upTo: Infinity, rate: 0.40 }
+    ];
+
+    mount.innerHTML =
+      '<div class="widget">' +
+      '<div class="widget__title"><span class="dot"></span>Тренажёр: прогрессивный налог</div>' +
+      '<div class="widget__hint">Условная шкала: 10% до 500 000₽, 20% до 1 500 000₽, 30% до 4 000 000₽, 40% сверху. Только доход внутри диапазона облагается соответствующей ставкой.</div>' +
+      '<div class="widget__grid">' +
+      '<div>' +
+      '<div class="control"><div class="control__label"><span>Годовой доход, ₽</span></div><input type="number" class="num-input" id="tax-income" value="2000000"></div>' +
+      '</div>' +
+      '<div class="chart-box" id="tax-chart"></div>' +
+      '</div>' +
+      '<div class="readout" id="tax-readout"></div>' +
+      '</div>';
+
+    var incomeInput = mount.querySelector("#tax-income");
+    var chartEl = mount.querySelector("#tax-chart");
+    var readoutEl = mount.querySelector("#tax-readout");
+    var colors = ["#7c5cff", "#2dd4da", "#f2b84b", "#e94f9e"];
+
+    function draw() {
+      var income = Number(incomeInput.value) || 0;
+      var remaining = income;
+      var lower = 0;
+      var totalTax = 0;
+      var segments = [];
+      BRACKETS.forEach(function (b, idx) {
+        var span = Math.min(remaining, b.upTo - lower);
+        span = Math.max(0, span);
+        var taxHere = span * b.rate;
+        totalTax += taxHere;
+        segments.push({ amount: span, tax: taxHere, rate: b.rate, color: colors[idx] });
+        remaining -= span;
+        lower = b.upTo;
+      });
+      var effectiveRate = income > 0 ? (totalTax / income) * 100 : 0;
+      var marginalRate = BRACKETS.find(function (b) { return income <= b.upTo; }) || BRACKETS[BRACKETS.length - 1];
+
+      var W = 300, H = 220, barW = 70, y0 = H - 30, maxV = Math.max(income, 1) * 1.05;
+      function toH(v) { return (v / maxV) * (H - 60); }
+      var inner = "";
+      inner += '<line x1="20" y1="' + y0 + '" x2="' + (W - 20) + '" y2="' + y0 + '" stroke="rgba(255,255,255,0.18)"/>';
+      var cursorY = y0;
+      segments.forEach(function (s) {
+        var h = toH(s.amount);
+        if (h <= 0) return;
+        inner += '<rect x="50" y="' + (cursorY - h).toFixed(1) + '" width="' + barW + '" height="' + h.toFixed(1) + '" fill="' + s.color + '" rx="2"/>';
+        cursorY -= h;
+      });
+      inner += '<text x="' + (50 + barW / 2) + '" y="' + (y0 + 18) + '" fill="#7c839c" font-size="10" text-anchor="middle">доход по ставкам</text>';
+      chartEl.innerHTML = svg(W, H, inner);
+
+      readoutEl.innerHTML =
+        '<div class="readout__item"><div class="readout__num" style="color:#f2b84b">' + fmt(totalTax) + '₽</div><div class="readout__label">налог за год</div></div>' +
+        '<div class="readout__item"><div class="readout__num">' + fmt(effectiveRate, 1) + '%</div><div class="readout__label">эффективная ставка</div></div>' +
+        '<div class="readout__item"><div class="readout__num" style="color:#e94f9e">' + fmt(marginalRate.rate * 100, 0) + '%</div><div class="readout__label">предельная ставка</div></div>' +
+        '<div class="readout__explain">Предельная ставка (' + fmt(marginalRate.rate * 100, 0) + '%) применяется только к последнему рублю дохода. Эффективная ставка (' + fmt(effectiveRate, 1) + '%) — это налог, поделённый на весь доход, и она всегда ниже предельной при прогрессивной шкале.</div>';
+    }
+
+    incomeInput.addEventListener("input", draw);
+    draw();
+  };
+
+  // ---- 7.12 Monopoly power & deadweight loss ----
+  WIDGETS["interactive-monopoly"] = function (mount) {
+    var W = 420, H = 300, PAD = 40;
+    // Demand: P = 100 - Q  |  Marginal cost constant = 20
+    var demA = 100, demB = 1, mc = 20;
+    var maxQ = 100, maxP = 110;
+
+    mount.innerHTML =
+      '<div class="widget">' +
+      '<div class="widget__title"><span class="dot"></span>Тренажёр: рыночная власть</div>' +
+      '<div class="widget__hint">При совершенной конкуренции цена равна предельным издержкам. Двигайте ползунок «рыночной власти» — продавец поднимает цену выше издержек и сокращает объём, возникают чистые потери общества.</div>' +
+      '<div class="widget__grid">' +
+      '<div>' +
+      '<div class="control"><div class="control__label"><span>Рыночная власть продавца</span><b id="mo-val">0%</b></div>' +
+      '<input type="range" id="mo-slider" min="0" max="100" value="0"></div>' +
+      '<div class="readout" id="mo-readout"></div>' +
+      '</div>' +
+      '<div class="chart-box" id="mo-chart"></div>' +
+      '</div></div>';
+
+    var slider = mount.querySelector("#mo-slider");
+    var valEl = mount.querySelector("#mo-val");
+    var chartEl = mount.querySelector("#mo-chart");
+    var readoutEl = mount.querySelector("#mo-readout");
+
+    var qComp = demA - mc; // competitive quantity where P = MC
+    var pComp = mc;
+
+    function draw() {
+      var power = Number(slider.value) / 100;
+      valEl.textContent = Math.round(power * 100) + "%";
+
+      // Monopolist chooses Q to maximize profit: MR = demA - 2*Q = MC blended with power
+      var qMono = demA - mc - power * ((demA - mc) / 2);
+      qMono = Math.max(0.1, qMono);
+      var pMono = demA - demB * qMono;
+
+      var x0 = PAD, y0 = H - PAD;
+      function toPx(q) { return x0 + (q / maxQ) * (W - PAD * 2); }
+      function toPy(p) { return y0 - (p / maxP) * (H - PAD * 2); }
+
+      var qDemandEnd = Math.min(maxQ, demA / demB);
+      var demandPts = [[0, demA], [qDemandEnd, demA - demB * qDemandEnd]];
+      function lineD(pts) { return "M" + pts.map(function (p) { return toPx(p[0]).toFixed(1) + "," + toPy(p[1]).toFixed(1); }).join(" L"); }
+
+      var inner = "";
+      inner += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + (W - PAD) + '" y2="' + y0 + '" stroke="rgba(255,255,255,0.18)"/>';
+      inner += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + PAD + '" stroke="rgba(255,255,255,0.18)"/>';
+      inner += '<text x="' + (W - PAD) + '" y="' + (y0 + 18) + '" fill="#7c839c" font-size="10" text-anchor="end">Объём (Q)</text>';
+      inner += '<text x="' + (x0 - 6) + '" y="' + (PAD - 6) + '" fill="#7c839c" font-size="10" text-anchor="start">Цена (P)</text>';
+      inner += '<line x1="' + x0 + '" y1="' + toPy(mc).toFixed(1) + '" x2="' + (W - PAD) + '" y2="' + toPy(mc).toFixed(1) + '" stroke="rgba(255,255,255,0.22)" stroke-dasharray="4 4"/>';
+      inner += '<text x="' + (x0 + 4) + '" y="' + (toPy(mc) - 5) + '" fill="#7c839c" font-size="9">предельные издержки</text>';
+
+      if (power > 0.02) {
+        var dwdD = "M" + toPx(qMono).toFixed(1) + "," + toPy(pMono).toFixed(1) +
+          " L" + toPx(qComp).toFixed(1) + "," + toPy(pComp).toFixed(1) +
+          " L" + toPx(qMono).toFixed(1) + "," + toPy(mc).toFixed(1) + " Z";
+        inner += '<path d="' + dwdD + '" fill="rgba(233,79,158,0.28)"/>';
+      }
+
+      inner += '<path d="' + lineD(demandPts) + '" fill="none" stroke="#2dd4da" stroke-width="2.5"/>';
+      inner += '<circle cx="' + toPx(qComp).toFixed(1) + '" cy="' + toPy(pComp).toFixed(1) + '" r="4.5" fill="#6fe3ab" stroke="#080b16" stroke-width="1.5"/>';
+      inner += '<circle cx="' + toPx(qMono).toFixed(1) + '" cy="' + toPy(pMono).toFixed(1) + '" r="5.5" fill="#f2b84b" stroke="#080b16" stroke-width="1.5"/>';
+      inner += '<text x="' + (W - PAD - 4) + '" y="' + (PAD + 12) + '" fill="#2dd4da" font-size="10" text-anchor="end">Спрос</text>';
+      chartEl.innerHTML = svg(W, H, inner);
+
+      var dwl = 0.5 * (qComp - qMono) * (pMono - mc);
+
+      readoutEl.innerHTML =
+        '<div class="readout__item"><div class="readout__num" style="color:#f2b84b">' + fmt(pMono) + '₽</div><div class="readout__label">цена продавца</div></div>' +
+        '<div class="readout__item"><div class="readout__num">' + fmt(qMono) + '</div><div class="readout__label">объём продаж</div></div>' +
+        '<div class="readout__item"><div class="readout__num" style="color:#e94f9e">' + fmt(dwl) + '</div><div class="readout__label">потери общества (DWL)</div></div>' +
+        '<div class="readout__explain">' + (power < 0.02
+          ? "Без рыночной власти цена равна предельным издержкам (" + fmt(pComp) + "₽) — это результат совершенной конкуренции, потерь общества нет."
+          : "Розовая область — чистые потери общества: сделки, которые принесли бы пользу и покупателю, и продавцу, но не происходят из-за завышенной цены.") + '</div>';
+    }
+
+    slider.addEventListener("input", draw);
+    draw();
+  };
+
+  // ---- 7.13 Fiscal multiplier ----
+  WIDGETS["interactive-multiplier"] = function (mount) {
+    mount.innerHTML =
+      '<div class="widget">' +
+      '<div class="widget__title"><span class="dot"></span>Тренажёр: эффект мультипликатора</div>' +
+      '<div class="widget__hint">Госрасходы становятся чьим-то доходом, часть которого снова тратится — так одна инъекция расходов даёт больший суммарный эффект на экономику.</div>' +
+      '<div class="widget__grid">' +
+      '<div>' +
+      '<div class="control"><div class="control__label"><span>Первичные расходы, млрд ₽</span></div><input type="number" class="num-input" id="mp-injection" value="100"></div>' +
+      '<div class="control"><div class="control__label"><span>Склонность к потреблению (MPC)</span><b id="mp-mpc-val">70%</b></div><input type="range" id="mp-mpc" min="10" max="95" value="70"></div>' +
+      '</div>' +
+      '<div class="chart-box" id="mp-chart"></div>' +
+      '</div>' +
+      '<div class="readout" id="mp-readout"></div>' +
+      '</div>';
+
+    var injectionInput = mount.querySelector("#mp-injection");
+    var mpcSlider = mount.querySelector("#mp-mpc");
+    var chartEl = mount.querySelector("#mp-chart");
+    var readoutEl = mount.querySelector("#mp-readout");
+
+    function draw() {
+      var injection = Number(injectionInput.value) || 0;
+      var mpc = Number(mpcSlider.value) / 100;
+      mount.querySelector("#mp-mpc-val").textContent = Math.round(mpc * 100) + "%";
+
+      var multiplier = 1 / (1 - mpc);
+      var rounds = [];
+      var round = injection;
+      var total = 0;
+      for (var i = 0; i < 8; i++) {
+        rounds.push(round);
+        total += round;
+        round = round * mpc;
+      }
+      var totalEffect = injection * multiplier;
+
+      var W = 380, H = 220, PAD = 30;
+      var barW = (W - PAD * 2) / rounds.length - 8;
+      var maxV = rounds[0] * 1.1 || 10;
+      var x0 = PAD, y0 = H - PAD;
+      var inner = "";
+      inner += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + (W - PAD) + '" y2="' + y0 + '" stroke="rgba(255,255,255,0.18)"/>';
+      rounds.forEach(function (v, i) {
+        var h = (v / maxV) * (H - PAD - 30);
+        var x = x0 + i * ((W - PAD * 2) / rounds.length) + 4;
+        inner += '<rect x="' + x.toFixed(1) + '" y="' + (y0 - h).toFixed(1) + '" width="' + barW.toFixed(1) + '" height="' + Math.max(h, 1).toFixed(1) + '" fill="#7c5cff" opacity="' + (1 - i * 0.09).toFixed(2) + '" rx="2"/>';
+      });
+      inner += '<text x="' + x0 + '" y="' + (y0 + 16) + '" fill="#7c839c" font-size="9">раунд 1</text>';
+      inner += '<text x="' + (W - PAD) + '" y="' + (y0 + 16) + '" fill="#7c839c" font-size="9" text-anchor="end">раунд ' + rounds.length + '…</text>';
+      chartEl.innerHTML = svg(W, H, inner);
+
+      readoutEl.innerHTML =
+        '<div class="readout__item"><div class="readout__num" style="color:#7c5cff">×' + fmt(multiplier, 2) + '</div><div class="readout__label">мультипликатор</div></div>' +
+        '<div class="readout__item"><div class="readout__num" style="color:#f2b84b">' + fmt(totalEffect) + '</div><div class="readout__label">итоговый эффект, млрд ₽</div></div>' +
+        '<div class="readout__explain">Каждый рубль расходов тратится снова и снова: при MPC = ' + Math.round(mpc * 100) + '% каждый последующий раунд тратит только часть предыдущего. Итоговый эффект на экономику — не ' + fmt(injection) + ', а ' + fmt(totalEffect) + ' млрд ₽, то есть в ' + fmt(multiplier, 2) + ' раза больше.</div>';
+    }
+
+    [injectionInput, mpcSlider].forEach(function (el) { el.addEventListener("input", draw); });
+    draw();
+  };
+
+  // ---- 7.14 Exchange rate & purchasing power ----
+  WIDGETS["interactive-exchange"] = function (mount) {
+    mount.innerHTML =
+      '<div class="widget">' +
+      '<div class="widget__title"><span class="dot"></span>Тренажёр: валюты и паритет</div>' +
+      '<div class="widget__hint">Переведите сумму по курсу и сравните, за сколько часов работы её можно заработать в двух странах — это простая иллюстрация паритета покупательной способности.</div>' +
+      '<div class="widget__grid">' +
+      '<div>' +
+      '<div class="control"><div class="control__label"><span>Сумма, ₽</span></div><input type="number" class="num-input" id="ex-amount" value="10000"></div>' +
+      '<div class="control"><div class="control__label"><span>Курс валюты, ₽ за 1 ед.</span><b id="ex-rate-val">95</b></div><input type="range" id="ex-rate" min="1" max="200" value="95"></div>' +
+      '<div class="control"><div class="control__label"><span>Средняя зарплата в час, ₽</span></div><input type="number" class="num-input" id="ex-wage" value="400"></div>' +
+      '</div>' +
+      '<div class="chart-box" id="ex-chart"></div>' +
+      '</div>' +
+      '<div class="readout" id="ex-readout"></div>' +
+      '</div>';
+
+    var amountInput = mount.querySelector("#ex-amount");
+    var rateSlider = mount.querySelector("#ex-rate");
+    var wageInput = mount.querySelector("#ex-wage");
+    var chartEl = mount.querySelector("#ex-chart");
+    var readoutEl = mount.querySelector("#ex-readout");
+
+    function draw() {
+      var amount = Number(amountInput.value) || 0;
+      var rate = Number(rateSlider.value);
+      var wage = Number(wageInput.value) || 1;
+      mount.querySelector("#ex-rate-val").textContent = rate;
+
+      var converted = amount / rate;
+      var hoursLocal = amount / wage;
+
+      var W = 260, H = 220;
+      var barW = 60, y0 = H - 30, maxV = Math.max(amount, converted * 10, 1);
+      function toH(v) { return (v / maxV) * (H - 60); }
+      var h1 = toH(amount);
+      var inner = "";
+      inner += '<line x1="20" y1="' + y0 + '" x2="' + (W - 20) + '" y2="' + y0 + '" stroke="rgba(255,255,255,0.18)"/>';
+      inner += '<rect x="60" y="' + (y0 - h1).toFixed(1) + '" width="' + barW + '" height="' + Math.max(h1, 1).toFixed(1) + '" fill="#7c5cff" rx="3"/>';
+      inner += '<text x="' + (60 + barW / 2) + '" y="' + (y0 + 18) + '" fill="#7c839c" font-size="10" text-anchor="middle">₽</text>';
+      inner += '<text x="' + (60 + barW / 2) + '" y="' + (y0 - h1 - 8) + '" fill="#f5f6fb" font-size="11" text-anchor="middle" font-family="Space Grotesk, sans-serif">' + fmt(amount) + '</text>';
+      chartEl.innerHTML = svg(W, H, inner);
+
+      readoutEl.innerHTML =
+        '<div class="readout__item"><div class="readout__num" style="color:#2dd4da">' + fmt(converted, 2) + '</div><div class="readout__label">в валюте по курсу ' + rate + '</div></div>' +
+        '<div class="readout__item"><div class="readout__num" style="color:#f2b84b">' + fmt(hoursLocal, 1) + '</div><div class="readout__label">часов работы, чтобы заработать эту сумму</div></div>' +
+        '<div class="readout__explain">При курсе ' + rate + '₽ за единицу валюты, ' + fmt(amount) + '₽ превращаются в ' + fmt(converted, 2) + ' единиц. Но реальная покупательная способность зависит не только от курса, а и от того, сколько товаров можно купить на эту сумму внутри страны — курс сам по себе не показывает, что «дороже» или «дешевле» жить.</div>';
+    }
+
+    [amountInput, rateSlider, wageInput].forEach(function (el) { el.addEventListener("input", draw); });
+    draw();
+  };
+
   // ---------------------------------------------------------------
   // 7.9 Profile view
   // ---------------------------------------------------------------
@@ -1778,7 +2350,8 @@
       { title: "Во все стороны", desc: "Начните все курсы платформы", unlocked: started === COURSES.length, icon: ICONS.book },
       { title: "Курс закрыт", desc: "Пройдите один курс полностью", unlocked: coursesFullyDone() >= 1, icon: ICONS.trophy },
       { title: "Отличник", desc: "Средний результат квизов от 90%", unlocked: avg !== null && avg >= 90, icon: ICONS.star },
-      { title: "Мастер экономики", desc: "Пройдите все уроки платформы", unlocked: done === totalLessons(), icon: ICONS.trophy }
+      { title: "Мастер экономики", desc: "Пройдите все уроки платформы", unlocked: done === totalLessons(), icon: ICONS.trophy },
+      { title: "Экономист-практик", desc: "Испробуйте все инструменты в разделе «Инструменты»", unlocked: Object.keys(progress.toolsViewed || {}).length >= TOOLS.length, icon: ICONS.gdp }
     ];
   }
 
@@ -1813,6 +2386,7 @@
     html += '<div class="stat-tile"><div class="stat-tile__icon">' + ICONS.chart + '</div><div class="stat-tile__num">' + pct + '%</div><div class="stat-tile__label">общий прогресс</div></div>';
     html += '<div class="stat-tile"><div class="stat-tile__icon">' + ICONS.star + '</div><div class="stat-tile__num">' + (progress.stars || 0) + '</div><div class="stat-tile__label">звёзд за квизы</div></div>';
     html += '<div class="stat-tile"><div class="stat-tile__icon">' + ICONS.flame + '</div><div class="stat-tile__num">' + streak + '</div><div class="stat-tile__label">серия уроков</div></div>';
+    html += '<div class="stat-tile"><div class="stat-tile__icon">' + ICONS.gdp + '</div><div class="stat-tile__num">' + Object.keys(progress.toolsViewed || {}).length + '/' + TOOLS.length + '</div><div class="stat-tile__label">инструментов испробовано</div></div>';
     html += '</div>';
 
     html += '<div class="section-title">Прогресс по курсам</div>';
@@ -1956,7 +2530,7 @@
     if (resetBtn) {
       resetBtn.addEventListener("click", function () {
         if (!window.confirm("Точно сбросить весь прогресс на этом устройстве? Это необратимо.")) return;
-        progress = { completed: {}, quizScores: {}, lastVisited: null, stars: 0 };
+        progress = { completed: {}, quizScores: {}, lastVisited: null, stars: 0, toolsViewed: {} };
         saveProgress();
         resetMsg.textContent = "Прогресс сброшен";
         resetMsg.className = "form-msg is-success";
@@ -1984,6 +2558,12 @@
     } else if (state.view === "profile") {
       renderSidebar(null, true);
       renderProfile();
+    } else if (state.view === "tools") {
+      renderSidebar(null, false, null, true);
+      renderToolsOverview();
+    } else if (state.view === "tool") {
+      renderSidebar(null, false, state.toolId, false);
+      renderTool(state.toolId);
     } else {
       renderSidebar(null);
       renderOverview();
