@@ -28,7 +28,7 @@
       var p = JSON.parse(localStorage.getItem(progressKey));
       if (p && typeof p === "object") return p;
     } catch (e) { /* ignore */ }
-    return { completed: {}, quizScores: {}, lastVisited: null, stars: 0, toolsViewed: {} };
+    return { completed: {}, quizScores: {}, lastVisited: null, stars: 0, toolsViewed: {}, weak: {}, mathQuizScores: {} };
   }
 
   function saveProgress() {
@@ -177,6 +177,22 @@
             }
           ]
         }
+      ],
+      mathQuiz: [
+        {
+          q: "Вечер длится 4 часа. За это время можно подработать по 300₽/час. Чему равны альтернативные издержки (в ₽) вечера, потраченного на учёбу вместо подработки?",
+          answer: 1200,
+          tolerance: 0,
+          unit: "₽",
+          explain: "Альтернативные издержки — это ценность лучшей упущенной альтернативы: 4 часа × 300₽ = 1200₽."
+        },
+        {
+          q: "Альтернативные издержки вечера — 1200₽. Билет в кино стоит 400₽. На сколько ₽ альтернативные издержки больше цены билета?",
+          answer: 800,
+          tolerance: 0,
+          unit: "₽",
+          explain: "1200₽ − 400₽ = 800₽. Сравнение альтернативных издержек с реальной ценой помогает понять полную стоимость решения."
+        }
       ]
     },
     {
@@ -274,6 +290,22 @@
               explain: "Товары не первой необходимости (рестораны, путешествия, роскошь) обычно эластичнее — от них легче отказаться при росте цены."
             }
           ]
+        }
+      ],
+      mathQuiz: [
+        {
+          q: "Цена товара выросла со 100₽ до 120₽ (+20%), а объём спроса упал с 50 до 40 шт (−20%). Чему равен коэффициент эластичности спроса по модулю?",
+          answer: 1,
+          tolerance: 0.05,
+          unit: "",
+          explain: "Эластичность = |%ΔQ| / |%ΔP| = 20% / 20% = 1 — это единичная эластичность."
+        },
+        {
+          q: "При цене 50₽ спрос и предложение равны 200 шт. Цена выросла до 60₽: предложение стало 240 шт, а спрос остался на уровне 200 шт. Каков размер избытка предложения (в шт.)?",
+          answer: 40,
+          tolerance: 0,
+          unit: "шт.",
+          explain: "Избыток = предложение − спрос = 240 − 200 = 40 штук. Это классический избыток при цене выше равновесной."
         }
       ]
     },
@@ -434,6 +466,22 @@
             }
           ]
         }
+      ],
+      mathQuiz: [
+        {
+          q: "Вложили 10 000₽ под 10% годовых на 2 года по формуле сложного процента. Сколько денег будет через 2 года (округлите до целых ₽)?",
+          answer: 12100,
+          tolerance: 5,
+          unit: "₽",
+          explain: "10000 × 1.10² = 10000 × 1.21 = 12100₽. Сложный процент начисляется на уже начисленные проценты тоже."
+        },
+        {
+          q: "Доход — 60 000₽. По правилу 50/30/20 сколько ₽ нужно направить на сбережения (20%)?",
+          answer: 12000,
+          tolerance: 0,
+          unit: "₽",
+          explain: "20% от 60000₽ = 12000₽ — именно столько правило рекомендует откладывать на сбережения и цели."
+        }
       ]
     },
     {
@@ -537,6 +585,22 @@
               explain: "Торговый баланс — это экспорт минус импорт за период. Положительное значение — профицит, отрицательное — дефицит."
             }
           ]
+        }
+      ],
+      mathQuiz: [
+        {
+          q: "Страна А может произвести либо 10 машин, либо 40 тонн зерна, полностью используя ресурсы. Каковы альтернативные издержки производства 1 машины (в тоннах зерна)?",
+          answer: 4,
+          tolerance: 0,
+          unit: "т",
+          explain: "40 тонн / 10 машин = 4 тонны зерна за каждую машину — это и есть альтернативная стоимость одной машины."
+        },
+        {
+          q: "Импортный тариф добавляет 15% к цене товара стоимостью 2000₽. Сколько ₽ составит новая цена?",
+          answer: 2300,
+          tolerance: 0,
+          unit: "₽",
+          explain: "2000₽ × 1.15 = 2300₽. Тариф удорожает импортный товар для конечного покупателя."
         }
       ]
     },
@@ -643,13 +707,31 @@
             }
           ]
         }
+      ],
+      mathQuiz: [
+        {
+          q: "В стране 3 млн безработных при рабочей силе 60 млн человек. Чему равен уровень безработицы в процентах?",
+          answer: 5,
+          tolerance: 0.1,
+          unit: "%",
+          explain: "Уровень безработицы = безработные / рабочая сила × 100% = 3 / 60 × 100% = 5%."
+        },
+        {
+          q: "Минимальная зарплата выросла с 20 000₽ до 23 000₽. На сколько процентов она выросла?",
+          answer: 15,
+          tolerance: 0.2,
+          unit: "%",
+          explain: "(23000 − 20000) / 20000 × 100% = 3000 / 20000 × 100% = 15%."
+        }
       ]
     }
   ];
 
   var LESSON_INDEX = {};
   var COURSE_OF_LESSON = {};
+  var COURSE_INDEX = {};
   COURSES.forEach(function (c) {
+    COURSE_INDEX[c.id] = c;
     c.lessons.forEach(function (l) {
       LESSON_INDEX[l.id] = l;
       COURSE_OF_LESSON[l.id] = c;
@@ -889,6 +971,9 @@
       html += '<p class="course-card__desc">' + course.desc + '</p>';
       html += '<div class="course-card__meta"><span>' + doneC + '/' + course.lessons.length + ' уроков</span><span>' + pctC + '%</span></div>';
       html += '<div class="mini-progress fill-' + course.theme + '"><i style="width:' + pctC + '%"></i></div>';
+      if (course.mathQuiz && course.mathQuiz.length && doneC === course.lessons.length) {
+        html += '<div class="course-card__mathlink" data-open-mathquiz="' + course.id + '">' + ICONS.chart + ' Числовой тест по теме →</div>';
+      }
       html += '</button>';
     });
     html += '</div>';
@@ -912,6 +997,12 @@
 
     root.querySelectorAll("[data-open-course]").forEach(function (btn) {
       btn.addEventListener("click", function () { navigate({ view: "lesson", lessonId: btn.getAttribute("data-open-course") }); });
+    });
+    root.querySelectorAll("[data-open-mathquiz]").forEach(function (el) {
+      el.addEventListener("click", function (e) {
+        e.stopPropagation();
+        navigate({ view: "mathquiz", courseId: el.getAttribute("data-open-mathquiz") });
+      });
     });
     root.querySelectorAll("[data-open-tool]").forEach(function (btn) {
       btn.addEventListener("click", function () { navigate({ view: "tool", toolId: btn.getAttribute("data-open-tool") }); });
@@ -1051,20 +1142,33 @@
     var widgetFn = WIDGETS[lesson.kind];
     if (widgetFn) widgetFn(widgetMount);
 
-    mountQuiz(document.getElementById("quiz-mount"), lesson);
+    mountQuiz(document.getElementById("quiz-mount"), lesson, course);
   }
 
   // ---------------------------------------------------------------
   // 6. Quiz engine
   // ---------------------------------------------------------------
 
-  function mountQuiz(container, lesson) {
+  // Records every answered question (right or wrong) against the parent course,
+  // so we can later tell the learner which topics are their weak spots.
+  function trackWeak(courseId, isCorrect) {
+    if (!courseId) return;
+    progress.weak = progress.weak || {};
+    var w = progress.weak[courseId] || { wrong: 0, total: 0 };
+    w.total += 1;
+    if (!isCorrect) w.wrong += 1;
+    progress.weak[courseId] = w;
+    saveProgress();
+  }
+
+  function mountQuiz(container, lesson, course) {
     if (!lesson.quiz || !lesson.quiz.length) return;
     var qs = lesson.quiz;
     var current = 0;
     var results = new Array(qs.length).fill(null); // null | true | false
     var selected = null;
     var confirmed = false;
+    var lastNxt = null;
 
     function renderProgressLine() {
       return '<div class="quiz-progress-line">' + qs.map(function (_, i) {
@@ -1124,6 +1228,7 @@
             confirmed = true;
             var isCorrect = selected === q.correct;
             results[current] = isCorrect;
+            trackWeak(course && course.id, isCorrect);
             if (isCorrect) {
               progress.stars = (progress.stars || 0) + 1;
               saveProgress();
@@ -1157,6 +1262,7 @@
 
       var pct = Math.round((correctCount / qs.length) * 100);
       var nxt = nextLessonId(lesson.id);
+      lastNxt = nxt;
       var mood = pct >= 80 ? "party" : pct >= 50 ? "happy" : "sad";
       var msg = pct >= 80 ? "Отличный результат! Урок засчитан." : pct >= 50 ? "Неплохо! Урок засчитан — можно повторить теорию выше." : "Урок засчитан. Стоит перечитать материал ещё раз.";
 
@@ -1164,9 +1270,13 @@
       html += mascotHTML(mood, "");
       html += '<div class="quiz-result__score">' + correctCount + '/' + qs.length + '</div>';
       html += '<div class="quiz-result__label">' + msg + '</div>';
+      var wrongIndices = [];
+      results.forEach(function (r, i) { if (r === false) wrongIndices.push(i); });
+
       html += '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">';
+      if (wrongIndices.length) html += '<button class="btn btn-grad" id="quiz-review-mistakes">Повторить ошибки (' + wrongIndices.length + ')</button>';
       html += '<button class="btn btn-ghost" id="quiz-retry">Пройти квиз заново</button>';
-      if (nxt) html += '<button class="btn btn-grad" id="quiz-go-next">Следующий урок →</button>';
+      if (nxt) html += '<button class="btn btn-ghost" id="quiz-go-next">Следующий урок →</button>';
       html += '</div></div>';
       container.innerHTML = '<div class="quiz-block">' + html + '</div>';
 
@@ -1177,6 +1287,233 @@
       });
       var goNext = container.querySelector("#quiz-go-next");
       if (goNext) goNext.addEventListener("click", function () { navigate({ view: "lesson", lessonId: nxt }); });
+      var reviewBtn = container.querySelector("#quiz-review-mistakes");
+      if (reviewBtn) reviewBtn.addEventListener("click", function () { reviewMistakes(wrongIndices); });
+    }
+
+    // Duolingo-style loop: keeps re-asking only the questions the learner got
+    // wrong, feeding a missed one back to the end of the queue, until every
+    // question in the queue has been answered correctly at least once.
+    function reviewMistakes(wrongIndices) {
+      var queue = wrongIndices.slice();
+      var rSelected = null;
+      var rConfirmed = false;
+
+      function renderReviewQuestion() {
+        var qi = queue[0];
+        var q = qs[qi];
+        var letters = ["A", "Б", "В", "Г"];
+        var html = '<div class="widget__title"><span class="dot"></span>Работа над ошибками</div>';
+        html += '<div class="quiz-review-hint">Осталось повторить: ' + queue.length + '</div>';
+        html += '<div class="quiz-q">' + q.q + '</div>';
+        html += '<div class="quiz-options">';
+        q.options.forEach(function (opt, i) {
+          var cls = "quiz-opt";
+          var disabledAttr = "";
+          if (rConfirmed) {
+            disabledAttr = "disabled";
+            if (i === q.correct) cls += " is-correct";
+            else if (i === rSelected) cls += " is-wrong";
+          } else if (i === rSelected) {
+            cls += " is-selected";
+          }
+          html += '<button class="' + cls + '" data-ropt="' + i + '" ' + disabledAttr + '><span class="quiz-opt__letter">' + letters[i] + '</span><span>' + opt + '</span></button>';
+        });
+        html += '</div>';
+
+        if (rConfirmed) {
+          var isCorrect = rSelected === q.correct;
+          html += '<div class="quiz-reveal is-visible">';
+          html += mascotHTML(isCorrect ? "happy" : "sad", isCorrect ? pick(["Теперь точно!", "Закрепили!"]) : pick(["Ещё раз попробуем чуть позже", "Ничего, вернёмся к этому вопросу"]));
+          html += '<div class="quiz-explain is-visible">' + q.explain + '</div>';
+          html += '</div>';
+          html += '<div class="quiz-footer"><button class="btn btn-grad" id="quiz-review-next">Дальше →</button></div>';
+        } else {
+          html += '<div class="quiz-footer"><button class="btn btn-grad" id="quiz-review-confirm"' + (rSelected === null ? " disabled" : "") + '>Подтвердить ответ</button></div>';
+        }
+
+        container.innerHTML = '<div class="quiz-block">' + html + '</div>';
+
+        container.querySelectorAll("[data-ropt]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            if (rConfirmed) return;
+            rSelected = Number(btn.getAttribute("data-ropt"));
+            renderReviewQuestion();
+          });
+        });
+
+        if (!rConfirmed) {
+          var confirmBtn = container.querySelector("#quiz-review-confirm");
+          if (confirmBtn) {
+            confirmBtn.addEventListener("click", function () {
+              if (rSelected === null) return;
+              rConfirmed = true;
+              var isCorrect = rSelected === q.correct;
+              if (isCorrect) { progress.stars = (progress.stars || 0) + 1; saveProgress(); }
+              renderReviewQuestion();
+              if (isCorrect) spawnConfetti(14, false);
+            });
+          }
+        } else {
+          container.querySelector("#quiz-review-next").addEventListener("click", function () {
+            var isCorrect = rSelected === q.correct;
+            queue.shift();
+            if (!isCorrect) queue.push(qi); // missed again → back of the line, Duolingo-style
+            rSelected = null;
+            rConfirmed = false;
+            if (queue.length === 0) {
+              renderReviewDone();
+            } else {
+              renderReviewQuestion();
+            }
+          });
+        }
+      }
+
+      function renderReviewDone() {
+        var html = '<div class="quiz-result">';
+        html += mascotHTML("party", "");
+        html += '<div class="quiz-result__label">Все ошибки этого урока закрыты! 🎉</div>';
+        html += '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">';
+        html += '<button class="btn btn-ghost" id="quiz-review-back">Назад к результату</button>';
+        if (lastNxt) html += '<button class="btn btn-grad" id="quiz-review-next-lesson">Следующий урок →</button>';
+        html += '</div></div>';
+        container.innerHTML = '<div class="quiz-block">' + html + '</div>';
+        spawnConfetti(30, true);
+        container.querySelector("#quiz-review-back").addEventListener("click", finishQuiz);
+        var goNextLesson = container.querySelector("#quiz-review-next-lesson");
+        if (goNextLesson) goNextLesson.addEventListener("click", function () { navigate({ view: "lesson", lessonId: lastNxt }); });
+      }
+
+      renderReviewQuestion();
+    }
+
+    renderQuestion();
+  }
+
+  // ---------------------------------------------------------------
+  // 6.5 Math quiz — open-ended numeric questions per topic, no options,
+  //     unlocked once every lesson of the course is completed. Answering
+  //     these also exercises basic math (percentages, ratios, sums).
+  // ---------------------------------------------------------------
+
+  function renderMathQuiz(courseId) {
+    var course = COURSE_INDEX[courseId];
+    if (!course || !course.mathQuiz || !course.mathQuiz.length) { navigate({ view: "overview" }); return; }
+
+    var html = "";
+    html += '<div class="breadcrumb"><button data-go-overview-crumb>Обзор</button> / ' + escapeHtml(course.title) + ' / Числовой тест</div>';
+    html += '<div class="lesson-header"><div>';
+    html += '<span class="lesson-header__type">Числовой тест по теме</span>';
+    html += '<h1>' + escapeHtml(course.title) + ': проверь расчёты</h1>';
+    html += '</div></div>';
+    html += '<div class="lesson-block"><p>Здесь нет вариантов ответа — впишите число самостоятельно. Такие задачи заодно тренируют базовую математику: проценты, доли и простые формулы из темы.</p></div>';
+    html += '<div id="mathquiz-mount"></div>';
+    html += '<div class="lesson-nav"><button class="btn btn-ghost" data-go-overview-2>← К списку курсов</button></div>';
+
+    root.innerHTML = html;
+    root.querySelectorAll("[data-go-overview-crumb], [data-go-overview-2]").forEach(function (el) {
+      el.addEventListener("click", function () { navigate({ view: "overview" }); });
+    });
+
+    mountMathQuiz(document.getElementById("mathquiz-mount"), course);
+  }
+
+  function mountMathQuiz(container, course) {
+    var qs = course.mathQuiz;
+    var current = 0;
+    var results = new Array(qs.length).fill(null);
+    var confirmed = false;
+    var lastVal = null;
+
+    function checkAnswer(q, raw) {
+      var val = parseFloat(String(raw).replace(",", "."));
+      if (isNaN(val)) return false;
+      var tol = typeof q.tolerance === "number" ? q.tolerance : 0;
+      return Math.abs(val - q.answer) <= tol;
+    }
+
+    function renderQuestion() {
+      var q = qs[current];
+      var html = '<div class="widget__title"><span class="dot"></span>Впиши ответ числом</div>';
+      html += '<div class="quiz-progress-line">' + qs.map(function (_, i) {
+        var cls = i === current ? "is-current" : (results[i] === true ? "is-correct" : (results[i] === false ? "is-wrong" : ""));
+        return "<i class='" + cls + "'></i>";
+      }).join("") + "</div>";
+      html += '<div class="quiz-q">' + (current + 1) + '. ' + q.q + '</div>';
+      html += '<div class="quiz-input-row">';
+      html += '<input type="text" inputmode="decimal" class="quiz-input" id="mathquiz-input" placeholder="Ваш ответ"' + (confirmed ? " disabled" : "") + (lastVal !== null ? ' value="' + escapeHtml(lastVal) + '"' : '') + '>';
+      if (q.unit) html += '<span class="quiz-input-unit">' + escapeHtml(q.unit) + '</span>';
+      html += '</div>';
+
+      if (confirmed) {
+        var isCorrect = results[current];
+        html += '<div class="quiz-reveal is-visible">';
+        html += mascotHTML(isCorrect ? "happy" : "sad", isCorrect ? pick(["Точный расчёт!", "Ровно в цифру!"]) : "Правильный ответ: " + q.answer + (q.unit ? " " + q.unit : ""));
+        html += '<div class="quiz-explain is-visible">' + q.explain + '</div>';
+        html += '</div>';
+        html += '<div class="quiz-footer"><button class="btn btn-grad" id="mathquiz-next">' + (current === qs.length - 1 ? "Завершить" : "Дальше →") + '</button></div>';
+      } else {
+        html += '<div class="quiz-footer"><button class="btn btn-grad" id="mathquiz-confirm">Подтвердить ответ</button></div>';
+      }
+
+      container.innerHTML = '<div class="quiz-block">' + html + '</div>';
+
+      var input = container.querySelector("#mathquiz-input");
+      if (!confirmed) {
+        input.focus();
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") container.querySelector("#mathquiz-confirm").click();
+        });
+        container.querySelector("#mathquiz-confirm").addEventListener("click", function () {
+          var raw = input.value.trim();
+          if (!raw) return;
+          lastVal = raw;
+          confirmed = true;
+          var isCorrect = checkAnswer(q, raw);
+          results[current] = isCorrect;
+          trackWeak(course.id, isCorrect);
+          if (isCorrect) { progress.stars = (progress.stars || 0) + 1; saveProgress(); updateStreak(); }
+          renderQuestion();
+          if (isCorrect) spawnConfetti(18, false);
+        });
+      } else {
+        container.querySelector("#mathquiz-next").addEventListener("click", function () {
+          if (current < qs.length - 1) {
+            current += 1; confirmed = false; lastVal = null; renderQuestion();
+          } else {
+            finishMathQuiz();
+          }
+        });
+      }
+    }
+
+    function finishMathQuiz() {
+      var correctCount = results.filter(function (r) { return r === true; }).length;
+      progress.mathQuizScores = progress.mathQuizScores || {};
+      progress.mathQuizScores[course.id] = { correct: correctCount, total: qs.length };
+      saveProgress();
+
+      var pct = Math.round((correctCount / qs.length) * 100);
+      var mood = pct >= 80 ? "party" : pct >= 50 ? "happy" : "sad";
+      var msg = pct >= 80 ? "Отличный счёт! Математическая база крепкая." : pct >= 50 ? "Неплохо! Есть куда подтянуть расчёты." : "Стоит повторить формулы этой темы и попробовать снова.";
+
+      var html = '<div class="quiz-result">';
+      html += mascotHTML(mood, "");
+      html += '<div class="quiz-result__score">' + correctCount + '/' + qs.length + '</div>';
+      html += '<div class="quiz-result__label">' + msg + '</div>';
+      html += '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">';
+      html += '<button class="btn btn-ghost" id="mathquiz-retry">Пройти заново</button>';
+      html += '<button class="btn btn-grad" id="mathquiz-overview">К списку курсов</button>';
+      html += '</div></div>';
+      container.innerHTML = '<div class="quiz-block">' + html + '</div>';
+
+      if (pct >= 80) spawnConfetti(46, true);
+
+      container.querySelector("#mathquiz-retry").addEventListener("click", function () {
+        current = 0; results = new Array(qs.length).fill(null); confirmed = false; lastVal = null; renderQuestion();
+      });
+      container.querySelector("#mathquiz-overview").addEventListener("click", function () { navigate({ view: "overview" }); });
     }
 
     renderQuestion();
@@ -2336,6 +2673,25 @@
     return total ? Math.round((correct / total) * 100) : null;
   }
 
+  // Aggregates every wrong/right answer recorded via trackWeak() per course
+  // and returns the topics the learner struggles with most, worst first.
+  // Requires at least 3 answered questions in a topic so a single unlucky
+  // guess doesn't misleadingly flag it as a "weak spot".
+  function weakTopics() {
+    var weak = progress.weak || {};
+    var list = [];
+    Object.keys(weak).forEach(function (courseId) {
+      var w = weak[courseId];
+      var course = COURSE_INDEX[courseId];
+      if (!course || !w.total || w.total < 3) return;
+      var pct = Math.round((w.wrong / w.total) * 100);
+      if (pct <= 0) return;
+      list.push({ course: course, wrong: w.wrong, total: w.total, pct: pct });
+    });
+    list.sort(function (a, b) { return b.pct - a.pct; });
+    return list.slice(0, 4);
+  }
+
   function coursesFullyDone() {
     return COURSES.filter(function (c) { return courseCompletedCount(c) === c.lessons.length; }).length;
   }
@@ -2407,6 +2763,21 @@
       html += '<div class="settings-card"><div class="settings-card__title">' + ICONS.chart + ' Средний результат квизов</div>';
       html += '<div class="settings-card__hint">Средняя доля правильных ответов по всем пройденным квизам: <b style="color:var(--ink-0)">' + avg + '%</b></div></div>';
     }
+
+    var weakList = weakTopics();
+    if (weakList.length) {
+      html += '<div class="settings-card"><div class="settings-card__title">' + ICONS.flame + ' Слабые места</div>';
+      html += '<div class="settings-card__hint">Темы, где ошибок в квизах больше всего — стоит вернуться и повторить.</div>';
+      html += '<div class="weak-list">';
+      weakList.forEach(function (w) {
+        html += '<div class="weak-item">';
+        html += '<div class="weak-item__top"><span>' + escapeHtml(w.course.title) + '</span><span>' + w.wrong + ' из ' + w.total + ' ошибок (' + w.pct + '%)</span></div>';
+        html += '<div class="weak-item__bar"><i style="width:' + w.pct + '%"></i></div>';
+        html += '<button class="btn btn-ghost weak-item__btn" data-review-course="' + w.course.id + '">Повторить тему →</button>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+    }
     html += '</div>';
 
     // ---- Achievements panel ----
@@ -2458,6 +2829,15 @@
       btn.addEventListener("click", function () {
         profileActiveTab = btn.getAttribute("data-ptab");
         renderProfile();
+      });
+    });
+
+    root.querySelectorAll("[data-review-course]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var course = COURSE_INDEX[btn.getAttribute("data-review-course")];
+        if (!course) return;
+        var firstUnfinished = course.lessons.filter(function (l) { return !progress.completed[l.id]; })[0] || course.lessons[0];
+        navigate({ view: "lesson", lessonId: firstUnfinished.id });
       });
     });
 
@@ -2530,7 +2910,7 @@
     if (resetBtn) {
       resetBtn.addEventListener("click", function () {
         if (!window.confirm("Точно сбросить весь прогресс на этом устройстве? Это необратимо.")) return;
-        progress = { completed: {}, quizScores: {}, lastVisited: null, stars: 0, toolsViewed: {} };
+        progress = { completed: {}, quizScores: {}, lastVisited: null, stars: 0, toolsViewed: {}, weak: {}, mathQuizScores: {} };
         saveProgress();
         resetMsg.textContent = "Прогресс сброшен";
         resetMsg.className = "form-msg is-success";
@@ -2564,6 +2944,9 @@
     } else if (state.view === "tool") {
       renderSidebar(null, false, state.toolId, false);
       renderTool(state.toolId);
+    } else if (state.view === "mathquiz") {
+      renderSidebar(null);
+      renderMathQuiz(state.courseId);
     } else {
       renderSidebar(null);
       renderOverview();
