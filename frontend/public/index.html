@@ -4,6 +4,15 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Index — учись понимать экономику</title>
+<meta name="description" content="Index — образовательная платформа по финансовой грамотности для детей и подростков 8–16 лет. Интерактивные тренажёры и симуляторы вместо скучных лекций: депозиты, кредиты, налоги и бюджет — просто и наглядно." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Index — учись понимать экономику" />
+<meta property="og:description" content="Финансовая грамотность для детей и подростков 8–16 лет в игровом формате: тренажёры, симуляторы и понятные объяснения вместо скучных лекций." />
+<meta property="og:locale" content="ru_RU" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Index — учись понимать экономику" />
+<meta name="twitter:description" content="Финансовая грамотность для детей и подростков 8–16 лет в игровом формате." />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -63,6 +72,11 @@
           <li>Ставка ЦБ <span class="flat">16.0%</span></li>
           <li>Индекс Мосбиржи <span class="up">▲ 1.1%</span></li>
         </ul>
+
+        <div class="brand-about">
+          <p>Не понимаешь, что такое депозиты, кредиты и налоги, о которых говорят взрослые за столом? Наша платформа превращает сложную экономику в понятные интерактивные тренажеры и симуляторы для детей и подростков от 8 до 16 лет. Никаких скучных лекций и зазубривания: здесь ты в игровом формате проходишь путь от первых карманных денег до уверенных финансовых решений, сразу видя результат своих действий.</p>
+          <p>Этот сайт — твой личный гид по финансовой независимости и безопасности в реальном мире. Учась здесь, ты не просто узнаешь, как работают финансы, а получишь суперсилу, которой часто не хватает даже взрослым: научишься избегать бесполезных трат, защищать свои сбережения от мошенников и прокачаешь предпринимательское мышление. Заходи, проходи интерактивные задания и сделай первый шаг к своим большим мечтам уже сегодня!</p>
+        </div>
       </div>
     </section>
 
@@ -101,7 +115,7 @@
               <span class="checkbox-box"></span>
               Запомнить меня
             </label>
-            <a href="#" class="link-muted">Забыли пароль?</a>
+            <a href="#" class="link-muted" id="forgot-pass-link">Забыли пароль?</a>
           </div>
 
           <button type="submit" class="btn-primary">
@@ -109,6 +123,11 @@
           </button>
 
           <p class="form-message" data-form="login"></p>
+
+          <div class="divider"><span>или</span></div>
+
+          <div class="google-btn-wrap" data-google-btn="login"></div>
+          <p class="form-message" data-form="login-google"></p>
 
           <p class="switch-line">Ещё нет аккаунта? <button type="button" class="link-strong" data-switch="register">Создать</button></p>
         </form>
@@ -157,6 +176,11 @@
 
           <p class="form-message" data-form="register"></p>
 
+          <div class="divider"><span>или</span></div>
+
+          <div class="google-btn-wrap" data-google-btn="register"></div>
+          <p class="form-message" data-form="register-google"></p>
+
           <p class="switch-line">Уже с нами? <button type="button" class="link-strong" data-switch="login">Войти</button></p>
         </form>
 
@@ -165,7 +189,12 @@
 
   </main>
 
-  <script>window.__API_BASE__ = "https://econ-platform-xeav.onrender.com/api";</script>
+  <script>
+    window.__API_BASE__ = "https://econ-platform-xeav.onrender.com/api";
+    // Замени на свой Client ID из Google Cloud Console (см. docs/API.md)
+    window.__GOOGLE_CLIENT_ID__ = "345676044084-nbnfma58jc29l2qanig4t0luopbb7ksq.apps.googleusercontent.com";
+  </script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="assets/js/auth.js"></script>
   <script src="assets/js/background.js"></script>
 </body>

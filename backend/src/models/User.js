@@ -10,16 +10,42 @@ const User = {
     return db.get("users").find({ id }).value();
   },
 
+  findByGoogleId(googleId) {
+    return db.get("users").find({ googleId }).value();
+  },
+
   create({ name, email, passwordHash }) {
     const user = {
       id: uuid(),
       name,
       email: email.toLowerCase(),
       passwordHash,
+      googleId: null,
+      authProvider: "password",
       createdAt: new Date().toISOString()
     };
     db.get("users").push(user).write();
     return user;
+  },
+
+  createFromGoogle({ name, email, googleId, avatarUrl }) {
+    const user = {
+      id: uuid(),
+      name,
+      email: email.toLowerCase(),
+      passwordHash: null,
+      googleId,
+      avatarUrl: avatarUrl || null,
+      authProvider: "google",
+      createdAt: new Date().toISOString()
+    };
+    db.get("users").push(user).write();
+    return user;
+  },
+
+  linkGoogleId(id, googleId, avatarUrl) {
+    db.get("users").find({ id }).assign({ googleId, avatarUrl: avatarUrl || null }).write();
+    return this.findById(id);
   },
 
   updateName(id, name) {

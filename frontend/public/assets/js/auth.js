@@ -176,6 +176,82 @@
     }
   });
 
+  // ---------- Forgot password (пока без email-рассылки) ----------
+
+  var forgotLink = document.getElementById("forgot-pass-link");
+  if (forgotLink) {
+    forgotLink.addEventListener("click", function (e) {
+      e.preventDefault();
+      setFormMessage("login", "Восстановление по email пока не подключено. Попробуйте войти через Google, если регистрировались через него, или напишите в поддержку.", "is-error");
+    });
+  }
+
+  // ---------- Sign in with Google ----------
+
+  var GOOGLE_CLIENT_ID = window.__GOOGLE_CLIENT_ID__ || "";
+
+  function setGoogleMessage(form, text, kind) {
+    var el = document.querySelector('.form-message[data-form="' + form + '-google"]');
+    if (!el) return;
+    el.textContent = text || "";
+    el.classList.remove("is-error", "is-success");
+    if (kind) el.classList.add(kind);
+  }
+
+  async function handleGoogleCredential(response) {
+    var credential = response && response.credential;
+    if (!credential) return;
+
+    setGoogleMessage("login", "");
+    setGoogleMessage("register", "");
+
+    try {
+      var data = await postJSON("/auth/google", { credential: credential });
+      saveSession(data);
+      setGoogleMessage("login", "Готово! Перенаправляем в кабинет…", "is-success");
+      setGoogleMessage("register", "Готово! Перенаправляем в кабинет…", "is-success");
+      setTimeout(function () { window.location.href = "dashboard.html"; }, 400);
+    } catch (err) {
+      setGoogleMessage("login", err.message, "is-error");
+      setGoogleMessage("register", err.message, "is-error");
+    }
+  }
+
+  function initGoogleSignIn() {
+    if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.indexOf("ЗАМЕНИ") === 0) {
+      // Client ID ещё не настроен — тихо скрываем кнопки, чтобы не пугать пользователя нерабочим виджетом
+      document.querySelectorAll(".google-btn-wrap").forEach(function (el) { el.style.display = "none"; });
+      document.querySelectorAll(".divider").forEach(function (el) { el.style.display = "none"; });
+      return;
+    }
+
+    if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+      // Скрипт Google ещё не загрузился — пробуем ещё раз чуть позже
+      setTimeout(initGoogleSignIn, 150);
+      return;
+    }
+
+    window.google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleCredential
+    });
+
+    document.querySelectorAll("[data-google-btn]").forEach(function (wrap) {
+      window.google.accounts.id.renderButton(wrap, {
+        type: "standard",
+        theme: "filled_black",
+        size: "large",
+        shape: "pill",
+        text: "continue_with",
+        logo_alignment: "left",
+        width: wrap.offsetWidth || 320,
+        locale: "ru"
+      });
+    });
+  }
+
+  initGoogleSignIn();
+
   // ---------- Register submit ----------
 
   panelRegister.addEventListener("submit", async function (e) {

@@ -111,6 +111,10 @@ html, body { overflow-x: hidden; }
   font-size: 12px;
 }
 
+.user-chip__avatar.has-photo {
+  background-color: var(--glass-strong);
+}
+
 .user-dropdown {
   position: absolute;
   right: 0; top: calc(100% + 8px);

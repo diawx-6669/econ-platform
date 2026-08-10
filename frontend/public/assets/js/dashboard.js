@@ -816,8 +816,19 @@
 
   function refreshUserChrome() {
     userNameEl.textContent = user.name || "Ученик";
-    userInitialEl.textContent = (user.name || "У").trim().charAt(0).toUpperCase();
     userEmailEl.textContent = user.email || "";
+
+    if (user.avatarUrl) {
+      userInitialEl.textContent = "";
+      userInitialEl.style.backgroundImage = "url('" + user.avatarUrl + "')";
+      userInitialEl.style.backgroundSize = "cover";
+      userInitialEl.style.backgroundPosition = "center";
+      userInitialEl.classList.add("has-photo");
+    } else {
+      userInitialEl.style.backgroundImage = "";
+      userInitialEl.classList.remove("has-photo");
+      userInitialEl.textContent = (user.name || "У").trim().charAt(0).toUpperCase();
+    }
   }
   refreshUserChrome();
 
@@ -2806,12 +2817,16 @@
 
     html += '<div class="settings-card">';
     html += '<div class="settings-card__title">' + ICONS.lock + ' Смена пароля</div>';
-    html += '<div class="settings-card__hint">Введите текущий пароль и новый пароль (минимум 8 символов).</div>';
-    html += '<div class="text-field"><label for="pf-cur-pass">Текущий пароль</label><input type="password" id="pf-cur-pass" autocomplete="current-password"></div>';
-    html += '<div class="text-field"><label for="pf-new-pass">Новый пароль</label><input type="password" id="pf-new-pass" autocomplete="new-password" minlength="8"></div>';
-    html += '<div class="text-field"><label for="pf-new-pass2">Повторите новый пароль</label><input type="password" id="pf-new-pass2" autocomplete="new-password" minlength="8"></div>';
-    html += '<div class="settings-row"><button class="btn btn-grad" id="pf-save-pass">Обновить пароль</button></div>';
-    html += '<p class="form-msg" id="pf-pass-msg"></p>';
+    if (user.authProvider === "google" || !user.passwordHash && user.authProvider !== "password") {
+      html += '<div class="settings-card__hint">Ты вошёл через Google, отдельного пароля для сайта у тебя нет — управлять входом можно в настройках своего Google-аккаунта.</div>';
+    } else {
+      html += '<div class="settings-card__hint">Введите текущий пароль и новый пароль (минимум 8 символов).</div>';
+      html += '<div class="text-field"><label for="pf-cur-pass">Текущий пароль</label><input type="password" id="pf-cur-pass" autocomplete="current-password"></div>';
+      html += '<div class="text-field"><label for="pf-new-pass">Новый пароль</label><input type="password" id="pf-new-pass" autocomplete="new-password" minlength="8"></div>';
+      html += '<div class="text-field"><label for="pf-new-pass2">Повторите новый пароль</label><input type="password" id="pf-new-pass2" autocomplete="new-password" minlength="8"></div>';
+      html += '<div class="settings-row"><button class="btn btn-grad" id="pf-save-pass">Обновить пароль</button></div>';
+      html += '<p class="form-msg" id="pf-pass-msg"></p>';
+    }
     html += '</div>';
 
     html += '<div class="settings-card danger-zone">';
